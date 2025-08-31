@@ -1,0 +1,191 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asset Management</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .main-gradient-bg {
+            background: linear-gradient(135deg, #0f8056 0%, #16b47b 100%);
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .fade-in {
+            animation: fadeIn 1.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 antialiased">
+
+    <!-- Hero Section -->
+    <section class="main-gradient-bg text-white pt-24 pb-32 md:pt-32 md:pb-40 relative overflow-hidden">
+        <!-- Animated decorative elements -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse"></div>
+            <div class="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+        </div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <!-- Centered larger logo with float animation -->
+            <div class="flex flex-col items-center justify-center mb-12 animate__animated animate__fadeIn">
+                <img src="{% static 'admin/img/logo.png' %}" alt="Logo" class="h-24 mb-6 filter brightness-0 invert float-animation" style="width: auto;">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight animate__animated animate__fadeIn">Asset Manager</h1>
+                <div class="w-24 h-1 bg-white/30 mb-6 animate__animated animate__fadeIn" style="animation-delay: 0.3s;"></div>
+            </div>
+
+            <h2 class="text-2xl md:text-4xl font-semibold mb-6 max-w-3xl mx-auto leading-tight animate__animated animate__fadeIn" style="animation-delay: 0.5s;">
+                Modern Digital Asset Management <br class="hidden md:block"/> for Industrial Infrastructure
+            </h2>
+            <p class="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed animate__animated animate__fadeIn" style="animation-delay: 0.7s;">
+                Streamline your asset lifecycle from procurement to retirement with our comprehensive platform.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 animate__animated animate__fadeIn" style="animation-delay: 0.9s;">
+                <a href="/members/register" class="btn-hover bg-white text-green-700 hover:bg-gray-100 font-medium py-3 px-8 rounded-full shadow-md inline-flex items-center justify-center transform transition-all duration-300 hover:-translate-y-1">
+                    Get Started <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+                <a href="/members/login" class="btn-hover bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium py-3 px-8 rounded-full inline-flex items-center justify-center transform transition-all duration-300 hover:-translate-y-1">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                </a>
+                <a href="#features" class="btn-hover bg-transparent border-2 border-white/30 hover:border-white/60 text-white font-medium py-3 px-8 rounded-full inline-flex items-center justify-center transform transition-all duration-300 hover:-translate-y-1">
+                    Learn More <i class="fas fa-chevron-down ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Comprehensive Asset Management</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Everything you need to manage industrial infrastructure efficiently
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card-hover bg-gray-50 rounded-xl p-8 border border-gray-100 transform transition-all duration-300 hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-desktop text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Full Asset Inventory</h3>
+                    <p class="text-gray-600">
+                        Track all hardware, software, and licenses with detailed specifications.
+                    </p>
+                </div>
+
+                <div class="card-hover bg-gray-50 rounded-xl p-8 border border-gray-100 transform transition-all duration-300 hover:-translate-y-2" style="transition-delay: 0.1s;">
+                    <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-tools text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Maintenance Tracking</h3>
+                    <p class="text-gray-600">
+                        Document all interventions, repairs, and upgrades with technician notes.
+                    </p>
+                </div>
+
+                <div class="card-hover bg-gray-50 rounded-xl p-8 border border-gray-100 transform transition-all duration-300 hover:-translate-y-2" style="transition-delay: 0.2s;">
+                    <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Analytics & Reporting</h3>
+                    <p class="text-gray-600">
+                        Generate detailed reports on asset utilization and maintenance history.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="animate__animated animate__fadeIn" style="animation-delay: 0.1s;">
+                    <div class="text-4xl font-bold text-green-600 mb-2">100%</div>
+                    <div class="text-gray-600">Asset Visibility</div>
+                </div>
+                <div class="animate__animated animate__fadeIn" style="animation-delay: 0.3s;">
+                    <div class="text-4xl font-bold text-green-600 mb-2">24/7</div>
+                    <div class="text-gray-600">Accessibility</div>
+                </div>
+                <div class="animate__animated animate__fadeIn" style="animation-delay: 0.5s;">
+                    <div class="text-4xl font-bold text-green-600 mb-2">99.9%</div>
+                    <div class="text-gray-600">Uptime</div>
+                </div>
+                <div class="animate__animated animate__fadeIn" style="animation-delay: 0.7s;">
+                    <div class="text-4xl font-bold text-green-600 mb-2">50%</div>
+                    <div class="text-gray-600">Cost Reduction</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-green-600 to-green-700 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to transform your asset management?</h2>
+            <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                Join our enterprise asset management platform today.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="/members/register" class="btn-hover bg-white text-green-700 hover:bg-gray-100 font-medium py-3 px-8 rounded-full shadow-md inline-flex items-center justify-center transform transition-all duration-300 hover:-translate-y-1">
+                    Get Started Free
+                </a>
+                <a href="/members/login" class="btn-hover bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium py-3 px-8 rounded-full inline-flex items-center justify-center transform transition-all duration-300 hover:-translate-y-1">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white/80 py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col items-center">
+                <img src="{% static 'admin/img/logo.png' %}" alt="Logo" class="h-12 mb-6 filter brightness-0 invert opacity-90">
+                <div class="flex space-x-6 mb-6">
+                    <a href="https://www.linkedin.com/company/ocp-group/" target="_blank" class="hover:text-white transition-colors transform hover:scale-110 duration-200" title="LinkedIn">
+                        <i class="fab fa-linkedin-in text-xl"></i>
+                    </a>
+                    <a href="https://twitter.com/OCPGroup_live" target="_blank" class="hover:text-white transition-colors transform hover:scale-110 duration-200" title="Twitter">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="https://www.facebook.com/OCPGroup.Official/" target="_blank" class="hover:text-white transition-colors transform hover:scale-110 duration-200" title="Facebook">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="https://www.youtube.com/user/OCPGroupChannel" target="_blank" class="hover:text-white transition-colors transform hover:scale-110 duration-200" title="YouTube">
+                        <i class="fab fa-youtube text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
+                <p>&copy; 2025 Asset Management Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

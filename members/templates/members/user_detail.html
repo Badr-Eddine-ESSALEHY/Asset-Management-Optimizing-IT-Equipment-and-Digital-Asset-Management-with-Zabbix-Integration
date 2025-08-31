@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}User Details - {{ user_obj.username }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
+                <div class="flex items-center space-x-6">
+                    <img src="{{ user_obj.profile.profile_picture.url }}"
+                         alt="Profile Picture"
+                         class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg">
+                    <div class="text-white">
+                        <h1 class="text-3xl font-bold">{{ user_obj.get_full_name|default:user_obj.username }}</h1>
+                        <p class="text-blue-100">@{{ user_obj.username }}</p>
+                        <p class="text-blue-200 text-sm">{{ user_obj.email }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold text-gray-800">Personal Information</h3>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Username</label>
+                            <p class="text-lg text-gray-900">{{ user_obj.username }}</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                            <p class="text-lg text-gray-900">{{ user_obj.email }}</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+                            <p class="text-lg text-gray-900">{{ user_obj.phone|default:"Not provided" }}</p>
+                        </div>
+
+                        {% if user_obj.profile.bio %}
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Bio</label>
+                            <p class="text-gray-900">{{ user_obj.profile.bio }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold text-gray-800">Account Details</h3>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Department</label>
+                            <p class="text-lg text-gray-900">{{ user_obj.department|default:"Not assigned" }}</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Role</label>
+                            <p class="text-lg text-gray-900">
+                                {% if user_obj.is_staff %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                        Administrator
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                        User
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
+                            <p class="text-lg text-gray-900">
+                                {% if user_obj.is_active %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Date Joined</label>
+                            <p class="text-lg text-gray-900">{{ user_obj.date_joined|date:"F d, Y" }}</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Last Login</label>
+                            <p class="text-lg text-gray-900">{{ user_obj.last_login|date:"F d, Y P"|default:"Never" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+                    <a href="{% url 'members:profile' %}"
+                       class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        Back to Profile
+                    </a>
+                    <a href="{% url 'admin:members_customuser_change' user_obj.pk %}"
+                       class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        Edit User
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

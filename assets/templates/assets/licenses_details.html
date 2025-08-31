@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="px-4 py-8 bg-gray-100 min-h-screen">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">License for {{ object.software.name }}</h1>
+        <div class="flex space-x-3">
+            {% if user.is_staff %}
+            <a href="{% url 'assets:license_edit' object.pk %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200 flex items-center">
+                <i class="fa-solid fa-pencil mr-2"></i> Edit
+            </a>
+            <a href="{% url 'assets:license_delete' object.pk %}" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200 flex items-center">
+                <i class="fa-solid fa-trash mr-2"></i> Delete
+            </a>
+            {% endif %}
+            <a href="{% url 'assets:license_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200">
+                Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-lg shadow-xl mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">License Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-700">
+            <div>
+                <p><strong class="font-semibold">Software:</strong> {{ object.software }}</p>
+                <p><strong class="font-semibold">License Key:</strong> {{ object.license_key }}</p>
+                <p><strong class="font-semibold">Seats:</strong> {{ object.seats }}</p>
+               <p><strong class="font-semibold">Status:</strong>
+    <span class="px-2 py-1 text-xs font-bold rounded-full
+        {% if object.status == 'active' %} bg-green-100 text-green-800
+        {% elif object.status == 'unassigned' %} bg-blue-100 text-blue-800
+        {% elif object.status == 'inactive' %} bg-red-100 text-red-800
+        {% elif object.status == 'expired' %} bg-red-100 text-red-800
+        {% else %} bg-gray-100 text-gray-800
+        {% endif %}">
+        {{ object.get_status_display }}
+    </span>
+</p>
+            </div>
+            <div>
+                <p><strong class="font-semibold">Purchase Date:</strong> {{ object.purchase_date|date:"F d, Y"|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Expiration Date:</strong> {{ object.expiration_date|date:"F d, Y"|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Purchase Cost:</strong> {{ object.cost|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Order Number:</strong> {{ object.order_number|default:"N/A" }}</p>
+            </div>
+            <div>
+                <p><strong class="font-semibold">Assigned To:</strong> {{ object.assigned_to|default:"Unassigned" }}</p>
+                <p><strong class="font-semibold">Installed On:</strong> {{ object.installed_on|default:"N/A" }}</p>
+            </div>
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-200">
+             <p><strong class="font-semibold">Notes:</strong><br>{{ object.notes|default:"No notes." }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden mb-6">
+        <div class="bg-red-600 text-white p-4 flex justify-between items-center">
+            <h4 class="text-xl font-bold flex items-center">
+                <i class="fa-solid fa-chart-line mr-2"></i> Zabbix Monitoring
+            </h4>
+            <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Not Applicable</span>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-600 mb-6">
+                Zabbix monitoring is not typically applicable to software licenses.
+                This section is a placeholder to maintain visual consistency with other detail pages.
+            </p>
+            <div class="mt-6 p-4 bg-gray-100 text-gray-700 rounded-lg">
+                <i class="fa-solid fa-info-circle mr-2"></i>
+                License status is managed directly within the asset management system and does not require real-time monitoring.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

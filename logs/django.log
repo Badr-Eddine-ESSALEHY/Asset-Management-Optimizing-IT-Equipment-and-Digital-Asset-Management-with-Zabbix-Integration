@@ -1,0 +1,957 @@
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+- Broken pipe from ('127.0.0.1', 65441)
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14469
+"GET /media/profile_pics/Screenshot_2025-07-26_144347.png HTTP/1.1" 304 0
+"GET /assets/software/ HTTP/1.1" 200 12726
+"GET /assets/interventions/ HTTP/1.1" 200 14412
+"GET /assets/interventions/add/ HTTP/1.1" 200 14732
+Failed to send intervention notification: emails/intervention_notification.txt
+Intervention ID: 2
+"POST /assets/interventions/add/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 18285
+"GET /assets/interventions/ HTTP/1.1" 200 17017
+"GET /dashboard/ HTTP/1.1" 200 14469
+"GET /assets/software/ HTTP/1.1" 200 12726
+"GET /assets/interventions/ HTTP/1.1" 200 17017
+"GET /assets/interventions/1/edit/ HTTP/1.1" 200 14886
+Failed to send status update notification: emails/intervention_status_update.txt
+"POST /assets/interventions/1/edit/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 18250
+"GET /dashboard/ HTTP/1.1" 200 14469
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 11212
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+- Broken pipe from ('127.0.0.1', 65533)
+"GET /assets/equipment/ HTTP/1.1" 200 16553
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"GET /assets/equipment/ HTTP/1.1" 200 16553
+"GET /assets/equipment/add/ HTTP/1.1" 200 23132
+"GET /assets/licenses/ HTTP/1.1" 200 13988
+"GET /assets/licenses/1/ HTTP/1.1" 200 5879
+"GET /assets/licenses/1/edit/ HTTP/1.1" 200 12246
+"POST /assets/licenses/1/edit/ HTTP/1.1" 302 0
+"GET /assets/licenses/ HTTP/1.1" 200 13997
+"GET /assets/licenses/1/edit/ HTTP/1.1" 200 12337
+"POST /assets/licenses/1/edit/ HTTP/1.1" 302 0
+"GET /assets/licenses/ HTTP/1.1" 200 13995
+"GET /assets/licenses/add/ HTTP/1.1" 200 12228
+"GET /assets/software/ HTTP/1.1" 200 13715
+"GET /assets/licenses/ HTTP/1.1" 200 13995
+"GET /assets/software/ HTTP/1.1" 200 13715
+"GET /assets/licenses/ HTTP/1.1" 200 13995
+"GET /assets/licenses/add/ HTTP/1.1" 200 12228
+"GET /assets/equipment/ HTTP/1.1" 200 16553
+"GET /assets/equipment/add/ HTTP/1.1" 200 23132
+"GET /assets/software/ HTTP/1.1" 200 13715
+"GET /assets/software/add/ HTTP/1.1" 200 9215
+"GET /assets/software/ HTTP/1.1" 200 13715
+"GET /assets/software/add/ HTTP/1.1" 200 9215
+"GET /assets/licenses/ HTTP/1.1" 200 13995
+"GET /assets/licenses/add/ HTTP/1.1" 200 12228
+"GET /assets/interventions/ HTTP/1.1" 200 17769
+"GET /assets/interventions/2/delete/ HTTP/1.1" 200 3741
+"POST /assets/interventions/2/delete/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 14804
+"GET /assets/interventions/add/ HTTP/1.1" 200 14732
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+- Broken pipe from ('127.0.0.1', 50488)
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"GET /assets/equipment/ HTTP/1.1" 200 16553
+"GET /assets/equipment/add/ HTTP/1.1" 200 23132
+"GET /assets/licenses/ HTTP/1.1" 200 13995
+"GET /assets/software/ HTTP/1.1" 200 13715
+"GET /assets/software/add/ HTTP/1.1" 200 9215
+"GET /assets/licenses/ HTTP/1.1" 200 13995
+"GET /assets/licenses/add/ HTTP/1.1" 200 12228
+"GET /assets/interventions/ HTTP/1.1" 200 14804
+"GET /assets/interventions/add/ HTTP/1.1" 200 14732
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+"GET /static/admin/img/logo.png HTTP/1.1" 304 0
+"GET /admin/ HTTP/1.1" 200 10889
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /admin/assets/equipment/add/ HTTP/1.1" 200 30308
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+"GET /admin/ HTTP/1.1" 200 10889
+"GET /admin/members/customuser/add/ HTTP/1.1" 200 18051
+"GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+"GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/ HTTP/1.1" 200 10889
+"GET /admin/members/customuser/4/change/ HTTP/1.1" 200 28513
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"GET /admin/ HTTP/1.1" 200 10889
+"GET /admin/assets/equipment/ HTTP/1.1" 200 15108
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /admin/ HTTP/1.1" 200 10889
+"GET /admin/assets/equipment/ HTTP/1.1" 200 15108
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/ HTTP/1.1" 200 10889
+"GET /admin/members/customuser/ HTTP/1.1" 200 15992
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+- Broken pipe from ('127.0.0.1', 53556)
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"GET /media/profile_pics/WhatsApp_Image_2025-08-05_at_10.02.16_d3f4456c.jpg HTTP/1.1" 304 0
+"GET /assets/interventions/ HTTP/1.1" 200 14804
+"GET /assets/interventions/1/edit/ HTTP/1.1" 200 14886
+Failed to send status update notification: emails/intervention_status_update.txt
+"POST /assets/interventions/1/edit/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 16029
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\parcInfoCP\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 11212
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14469
+"GET /media/profile_pics/Screenshot_2025-07-26_144347.png HTTP/1.1" 304 0
+"GET /assets/interventions/ HTTP/1.1" 200 14412
+"GET /assets/interventions/1/edit/ HTTP/1.1" 200 14886
+Failed to send status update notification: emails/intervention_status_update.txt
+"POST /assets/interventions/1/edit/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 15649
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\assets\signals.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14469
+"GET /assets/interventions/ HTTP/1.1" 200 14420
+"GET /assets/interventions/1/edit/ HTTP/1.1" 200 14886
+Failed to send status update notification: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+"POST /assets/interventions/1/edit/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 15598
+"GET /assets/interventions/ HTTP/1.1" 200 14412
+"GET /assets/interventions/add/ HTTP/1.1" 200 14732
+Failed to send intervention notification: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+Intervention ID: 3
+"POST /assets/interventions/add/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 18302
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\parcInfoCP\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\parcInfoCP\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+- Broken pipe from ('127.0.0.1', 55687)
+"GET /assets/interventions/3/edit/ HTTP/1.1" 200 14850
+Failed to send status update notification: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+"POST /assets/interventions/3/edit/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 18240
+"GET /assets/interventions/add/ HTTP/1.1" 200 14732
+Failed to send intervention notification: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+Intervention ID: 4
+"POST /assets/interventions/add/ HTTP/1.1" 302 0
+"GET /assets/interventions/ HTTP/1.1" 200 20901
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\parcInfoCP\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\parcInfoCP\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+"GET /static/admin/img/logo.png HTTP/1.1" 304 0
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"GET /media/profile_pics/WhatsApp_Image_2025-08-05_at_10.02.16_d3f4456c.jpg HTTP/1.1" 304 0
+"GET /assets/equipment/ HTTP/1.1" 200 16553
+"GET /assets/equipment/add/ HTTP/1.1" 200 23132
+"POST /assets/equipment/add/ HTTP/1.1" 302 0
+"GET /assets/equipment/ HTTP/1.1" 200 19643
+"GET /assets/equipment/?q=s54dwsdw&status=&category=&location= HTTP/1.1" 200 16489
+"GET /assets/equipment/?q=&status=&category=&location= HTTP/1.1" 200 19643
+"GET /assets/equipment/?q=&status=maintenance&category=&location= HTTP/1.1" 200 16882
+"GET /assets/equipment/?q=&status=maintenance&category=&location= HTTP/1.1" 200 16882
+"GET /assets/equipment/?q=&status=&category=laptop&location= HTTP/1.1" 200 19972
+"GET /assets/equipment/?q=&status=&category=&location= HTTP/1.1" 200 19643
+"GET /assets/licenses/ HTTP/1.1" 200 13995
+"GET /assets/software/ HTTP/1.1" 200 13715
+"GET /assets/interventions/ HTTP/1.1" 200 20754
+"GET /assets/equipment/ HTTP/1.1" 200 19643
+"GET /members/profile/ HTTP/1.1" 200 12316
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\forms.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\forms.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+- Broken pipe from ('127.0.0.1', 54219)
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+Internal Server Error: /members/profile/
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py", line 153, in profile_view
+    return render(request, 'members/profile.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 489, in parse
+    raise self.error(token, e)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 487, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 705, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 615, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'add_class'
+"GET /members/profile/ HTTP/1.1" 500 281674
+Internal Server Error: /members/profile/
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 1035, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'form_tags'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py", line 153, in profile_view
+    return render(request, 'members/profile.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 1097, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 1037, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'form_tags' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+i18n
+l10n
+log
+static
+tz
+widget_tweaks
+"GET /members/profile/ HTTP/1.1" 500 237594
+"GET /members/profile/ HTTP/1.1" 200 54033
+"GET /media/profile_pics/Screenshot_2025-07-26_144347.png HTTP/1.1" 304 0
+Internal Server Error: /admin/members/customuser/
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\options.py", line 683, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'quick_actions'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 290, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 330, in _get_non_gfk_field
+    field = opts.get_field(name)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: CustomUser has no field named 'quick_actions'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\base.py", line 45, in render
+    return super().render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\library.py", line 359, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 354, in result_list
+    "results": list(results(cl)),
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 330, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 321, in __init__
+    super().__init__(*items)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 219, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 299, in lookup_field
+    value = attr(obj)
+            ^^^^^^^^^
+  File "C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\admin.py", line 304, in quick_actions
+    if not obj.is_staff or obj == self.request.user:
+                                  ^^^^^^^^^^^^
+AttributeError: 'CustomUserAdmin' object has no attribute 'request'
+"GET /admin/members/customuser/ HTTP/1.1" 500 438784
+Internal Server Error: /members/profile/
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py", line 104, in profile_view
+    if user_form.is_valid() and profile_form.is_valid():
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\forms\forms.py", line 206, in is_valid
+    return self.is_bound and not self.errors
+                                 ^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\forms\forms.py", line 201, in errors
+    self.full_clean()
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\forms\forms.py", line 337, in full_clean
+    self._clean_fields()
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\forms\forms.py", line 347, in _clean_fields
+    value = getattr(self, "clean_%s" % name)()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\forms.py", line 255, in clean_profile_picture
+    if not picture.content_type.startswith('image/'):
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ImageFieldFile' object has no attribute 'content_type'
+"POST /members/profile/ HTTP/1.1" 500 94876
+"GET /members/profile/ HTTP/1.1" 200 54034
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\forms.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /members/profile/ HTTP/1.1" 200 54034
+"POST /members/profile/ HTTP/1.1" 302 0
+"GET /members/profile/ HTTP/1.1" 200 56008
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\PIL\ImagePalette.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"GET /members/profile/ HTTP/1.1" 200 66215
+Not Found: /members/generate-report/
+"GET /members/generate-report/ HTTP/1.1" 404 6768
+"GET /members/export-users/ HTTP/1.1" 200 312
+Internal Server Error: /admin/members/customuser/
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\options.py", line 683, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'quick_actions'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 290, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 330, in _get_non_gfk_field
+    field = opts.get_field(name)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: CustomUser has no field named 'quick_actions'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\base.py", line 45, in render
+    return super().render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\library.py", line 359, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 354, in result_list
+    "results": list(results(cl)),
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 330, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 321, in __init__
+    super().__init__(*items)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 219, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 299, in lookup_field
+    value = attr(obj)
+            ^^^^^^^^^
+  File "C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\admin.py", line 304, in quick_actions
+    if not obj.is_staff or obj == self.request.user:
+                                  ^^^^^^^^^^^^
+AttributeError: 'CustomUserAdmin' object has no attribute 'request'
+"GET /admin/members/customuser/ HTTP/1.1" 500 438892
+"GET / HTTP/1.1" 200 11212
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"GET /members/profile/ HTTP/1.1" 200 74671
+- Broken pipe from ('127.0.0.1', 56187)
+- Broken pipe from ('127.0.0.1', 56189)
+Not Found: /members/download-account-data/
+"GET /members/download-account-data/ HTTP/1.1" 404 6786
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 11212
+- Broken pipe from ('127.0.0.1', 63120)
+"GET /members/login HTTP/1.1" 301 0
+"GET /members/login/ HTTP/1.1" 200 2515
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 14502
+"GET /members/profile/ HTTP/1.1" 200 69785
+"GET /members/change-password/ HTTP/1.1" 200 5845
+"GET /members/profile/ HTTP/1.1" 200 69785
+Not Found: /members/enable-2fa/
+"GET /members/enable-2fa/ HTTP/1.1" 404 7327
+"GET /members/download-account-data/ HTTP/1.1" 200 190530
+"GET /members/download-account-data/ HTTP/1.1" 200 190530
+- Broken pipe from ('127.0.0.1', 62208)
+- Broken pipe from ('127.0.0.1', 63125)
+"GET /members/generate-report/ HTTP/1.1" 200 2453
+"GET /members/generate-report/ HTTP/1.1" 200 2453
+- Broken pipe from ('127.0.0.1', 54206)
+"GET /members/export-users/ HTTP/1.1" 200 312
+Not Found: /members/view-user/5/
+"GET /members/view-user/5/ HTTP/1.1" 404 7330
+"GET /admin/members/customuser/5/change/ HTTP/1.1" 200 36799
+"GET /static/admin/css/custom_admin.css HTTP/1.1" 404 1892
+"GET /static/admin/js/custom_admin.js HTTP/1.1" 404 1886
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/js/inlines.js HTTP/1.1" 200 15628
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+"GET /static/admin/css/custom_admin.css HTTP/1.1" 404 1892
+"GET /static/admin/js/custom_admin.js HTTP/1.1" 404 1886
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+Internal Server Error: /admin/members/customuser/
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\options.py", line 683, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'quick_actions'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 290, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 330, in _get_non_gfk_field
+    field = opts.get_field(name)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: CustomUser has no field named 'quick_actions'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\base.py", line 45, in render
+    return super().render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\library.py", line 359, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 354, in result_list
+    "results": list(results(cl)),
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 330, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 321, in __init__
+    super().__init__(*items)
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 219, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\badre\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\admin\utils.py", line 299, in lookup_field
+    value = attr(obj)
+            ^^^^^^^^^
+  File "C:\Users\badre\OneDrive\Bureau\Projet de stage OCP\parcInfoCP\members\admin.py", line 304, in quick_actions
+    if not obj.is_staff or obj == self.request.user:
+                                  ^^^^^^^^^^^^
+AttributeError: 'CustomUserAdmin' object has no attribute 'request'
+"GET /admin/members/customuser/ HTTP/1.1" 500 438892
+Not Found: /zabbix/
+"GET /zabbix/ HTTP/1.1" 404 3504
+Not Found: /favicon.ico
+- Broken pipe from ('127.0.0.1', 55057)
+"GET /assets/interventions/ HTTP/1.1" 200 20754
+"GET /members/profile/ HTTP/1.1" 200 69795
+"GET /members/change-password/ HTTP/1.1" 200 5845
+"GET /members/change-password/ HTTP/1.1" 200 13205
+"GET /members/change-password/ HTTP/1.1" 200 11594
+"GET /members/change-password/ HTTP/1.1" 200 11204
+"GET /members/change-password/ HTTP/1.1" 200 11594
+"GET /dashboard/ HTTP/1.1" 200 14502
+- Broken pipe from ('127.0.0.1', 61113)
+Not Found: /favicon.ico
+- Broken pipe from ('127.0.0.1', 61114)

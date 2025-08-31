@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OCP Asset Management{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            background: linear-gradient(180deg, #16b47b, #0f8056);
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <div class="sidebar w-64 min-h-screen fixed text-white flex flex-col">
+            <div class="p-4 mb-4">
+                <img src="{% static 'admin/img/logo.png' %}" alt="OCP Logo" style="width: 120px; height: auto;">
+                <h5 class="mt-2 text-xl font-semibold">Asset Management</h5>
+            </div>
+
+            <a href="{% url 'pages:dashboard' %}"
+               class="{% if request.resolver_match.view_name == 'pages:dashboard' %}active{% endif %} py-3 px-6 flex items-center">
+                <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+            </a>
+
+            <a href="{% url 'assets:equipment_list' %}"
+               class="{% if request.resolver_match.view_name == 'assets:equipment_list' %}active{% endif %} py-3 px-6 flex items-center">
+                <i class="fas fa-desktop mr-3"></i>Equipment Management
+            </a>
+
+            <a href="{% url 'assets:license_list' %}"
+               class="{% if request.resolver_match.view_name == 'assets:license_list' %}active{% endif %} py-3 px-6 flex items-center">
+                <i class="fas fa-key mr-3"></i>Licenses Management
+            </a>
+
+            <a href="{% url 'assets:software_list' %}"
+               class="{% if request.resolver_match.view_name == 'assets:software_list' %}active{% endif %} py-3 px-6 flex items-center">
+                <i class="fas fa-code mr-3"></i>Software Management
+            </a>
+
+            <a href="{% url 'assets:intervention_list' %}"
+               class="{% if request.resolver_match.view_name == 'assets:intervention_list' %}active{% endif %} py-3 px-6 flex items-center">
+                <i class="fas fa-tools mr-3"></i>Interventions
+            </a>
+
+            <a href="{% url 'members:profile' %}"
+               class="{% if request.resolver_match.view_name == 'members:profile' %}active{% endif %} py-3 px-6 flex items-center">
+                <i class="fas fa-user-circle mr-3"></i>Profile
+            </a>
+
+            <a href="/zabbix/"
+               class="{% if request.path == '/zabbix/' %}active{% endif %} py-3 px-6 flex items-center">
+                <i class="fas fa-chart-line mr-3"></i>Zabbix Monitoring
+            </a>
+        </div>
+
+        <div class="ml-64 flex-1">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

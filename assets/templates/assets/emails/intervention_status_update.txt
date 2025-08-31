@@ -1,0 +1,22 @@
+<!-- templates/emails/intervention_status_update.txt -->
+INTERVENTION STATUS UPDATED
+===========================
+
+Hello,
+
+The status of intervention "{{ intervention.title }}" has been updated.
+
+CURRENT STATUS: {{ intervention.get_status_display }}
+
+INTERVENTION SUMMARY:
+- Equipment: {{ equipment.name }} ({{ equipment.asset_tag }})
+- Technician: {{ technician.get_full_name|default:technician.username }}
+- Priority: {{ intervention.get_priority_display }}
+- Scheduled Date: {{ intervention.scheduled_date|date:"F j, Y H:i" }}
+{% if intervention.completed_date %}- Completed Date: {{ intervention.completed_date|date:"F j, Y H:i" }}{% endif %}
+
+View full details: {{ site_url }}/assets/interventions/{{ intervention.id }}/
+
+---
+This is an automated message from the OCP Asset Management System.
+Please do not reply to this email.

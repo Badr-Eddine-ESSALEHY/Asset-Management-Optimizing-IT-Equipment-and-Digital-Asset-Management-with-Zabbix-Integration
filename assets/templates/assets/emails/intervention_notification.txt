@@ -1,0 +1,29 @@
+<!-- templates/emails/intervention_notification.txt -->
+NEW INTERVENTION CREATED
+========================
+
+Hello,
+
+A new maintenance intervention has been created by {{ technician.get_full_name|default:technician.username }}.
+
+INTERVENTION DETAILS:
+- Title: {{ intervention.title }}
+- Equipment: {{ equipment.name }} ({{ equipment.asset_tag }})
+- Technician: {{ technician.get_full_name|default:technician.username }}
+- Priority: {{ intervention.get_priority_display }}
+- Status: {{ intervention.get_status_display }}
+- Scheduled Date: {{ intervention.scheduled_date|date:"F j, Y H:i" }}
+{% if intervention.equipment.location %}- Location: {{ intervention.equipment.location }}{% endif %}
+
+{% if intervention.description %}
+PROBLEM DESCRIPTION:
+{{ intervention.description }}
+{% endif %}
+
+View full details: {{ site_url }}/assets/interventions/{{ intervention.id }}/
+
+Please review this intervention and take appropriate action if necessary.
+
+---
+This is an automated message from the OCP Asset Management System.
+Please do not reply to this email.

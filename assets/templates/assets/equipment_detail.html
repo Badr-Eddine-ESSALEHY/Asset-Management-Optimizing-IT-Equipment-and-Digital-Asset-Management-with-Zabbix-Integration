@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="px-4 py-8 bg-gray-100 min-h-screen">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">{{ object.name }}</h1>
+        <div class="flex space-x-3">
+            {% if user.is_staff %}
+            <a href="{% url 'assets:equipment_edit' object.pk %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200 flex items-center">
+                <i class="fa-solid fa-pencil mr-2"></i> Edit
+            </a>
+            <a href="{% url 'assets:equipment_delete' object.pk %}" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200 flex items-center">
+                <i class="fa-solid fa-trash mr-2"></i> Delete
+            </a>
+            {% endif %}
+            <a href="{% url 'assets:equipment_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200">
+                Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-lg shadow-xl mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Equipment Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-700">
+            <div>
+                <p><strong class="font-semibold">Asset Tag:</strong> {{ object.asset_tag }}</p>
+                <p><strong class="font-semibold">Serial Number:</strong> {{ object.serial_number }}</p>
+                <p><strong class="font-semibold">Name:</strong> {{ object.name }}</p>
+                <p><strong class="font-semibold">Category:</strong> {{ object.get_category_display }}</p>
+                <p><strong class="font-semibold">Manufacturer:</strong> {{ object.manufacturer }}</p>
+                <p><strong class="font-semibold">Model:</strong> {{ object.model }}</p>
+                <p><strong class="font-semibold">Condition:</strong> {{ object.condition|default:"N/A" }}</p>
+            </div>
+            <div>
+                <p><strong class="font-semibold">Status:</strong>
+                    <span class="px-2 py-1 text-xs font-bold rounded-full
+                        {% if object.status == 'available' %} bg-green-100 text-green-800
+                        {% elif object.status == 'assigned' %} bg-blue-100 text-blue-800
+                        {% elif object.status == 'maintenance' %} bg-yellow-100 text-yellow-800
+                        {% else %} bg-gray-100 text-gray-800
+                        {% endif %}">
+                        {{ object.get_status_display }}
+                    </span>
+                </p>
+                <p><strong class="font-semibold">IP Address:</strong> {{ object.ip_address|default:"N/A" }}</p>
+                <p><strong class="font-semibold">MAC Address:</strong> {{ object.mac_address|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Hostname:</strong> {{ object.hostname|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Monitoring Enabled:</strong> {% if object.monitoring_enabled %}Yes{% else %}No{% endif %}</p>
+                <p><strong class="font-semibold">Zabbix Host ID:</strong> {{ object.zabbix_hostid|default:"N/A" }}</p>
+            </div>
+            <div>
+                <p><strong class="font-semibold">Assigned To:</strong> {{ object.assigned_to|default:"Unassigned" }}</p>
+                <p><strong class="font-semibold">Assigned Date:</strong> {{ object.assigned_date|date:"F d, Y"|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Location:</strong> {{ object.location|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Created by:</strong> {{ object.created_by|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Last Updated:</strong> {{ object.updated_at|date:"F d, Y P"|default:"N/A" }}</p>
+            </div>
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-200 grid grid-cols-1 gap-6 text-gray-700">
+             <div>
+                <p><strong class="font-semibold">Specifications:</strong><br>{{ object.specifications|default:"No specifications." }}</p>
+            </div>
+            <div>
+                <p class="mt-4"><strong class="font-semibold">Notes:</strong><br>{{ object.notes|default:"No notes." }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-lg shadow-xl mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Financial & Purchase Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+            <div>
+                <p><strong class="font-semibold">Purchase Date:</strong> {{ object.purchase_date|date:"F d, Y"|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Purchase Cost:</strong> {{ object.purchase_cost|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Purchase Order:</strong> {{ object.purchase_order|default:"N/A" }}</p>
+            </div>
+            <div>
+                <p><strong class="font-semibold">Supplier:</strong> {{ object.supplier|default:"N/A" }}</p>
+                <p><strong class="font-semibold">Warranty Expiration:</strong> {{ object.warranty_expiration|date:"F d, Y"|default:"N/A" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-lg shadow-xl mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Maintenance History</h3>
+        <ul class="space-y-3">
+            {% for intervention in object.interventions.all %}
+            <li class="bg-gray-50 p-4 rounded-md border border-gray-200 text-gray-700">
+                <strong class="font-semibold text-gray-900">{{ intervention.scheduled_date|date:"F d, Y" }}:</strong> {{ intervention.title }}
+                <p class="text-sm mt-1">Status: <span class="font-medium">{{ intervention.get_status_display }}</span></p>
+                <p class="text-sm mt-1">Details: {{ intervention.description }}</p>
+            </li>
+            {% empty %}
+            <li class="p-4 text-gray-500 italic">No interventions found for this equipment.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden mb-6">
+        <div class="bg-green-600 text-white p-4 flex justify-between items-center">
+            <h4 class="text-xl font-bold flex items-center">
+                <i class="fa-solid fa-chart-line mr-2"></i> Zabbix Monitoring
+            </h4>
+            <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Live Data Coming Soon</span>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-600 mb-6">
+                This section will display real-time monitoring data from Zabbix for this equipment
+                (<strong>{{ object.name }}</strong>). Currently showing placeholder charts.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                    <h6 class="text-lg text-center font-semibold text-gray-800 mb-2">CPU Usage</h6>
+                    <canvas id="cpuChart" height="150"></canvas>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                    <h6 class="text-lg text-center font-semibold text-gray-800 mb-2">Memory Usage</h6>
+                    <canvas id="memoryChart" height="150"></canvas>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                    <h6 class="text-lg text-center font-semibold text-gray-800 mb-2">Network Traffic</h6>
+                    <canvas id="networkChart" height="150"></canvas>
+                </div>
+            </div>
+            <div class="mt-6 p-4 bg-blue-100 text-blue-700 rounded-lg">
+                <i class="fa-solid fa-info-circle mr-2"></i>
+                Zabbix integration is not active yet. Once connected, these charts will show real-time metrics.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const chartConfig = (label, color) => ({
+        type: 'line',
+        data: {
+            labels: ['Now', '-1m', '-2m', '-3m', '-4m', '-5m'],
+            datasets: [{
+                label: label,
+                data: [65, 59, 80, 81, 56, 55],
+                borderColor: color,
+                backgroundColor: color + '33',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    new Chart(document.getElementById('cpuChart'), chartConfig('CPU %', '#ff4d4d'));
+    new Chart(document.getElementById('memoryChart'), chartConfig('Memory %', '#16b47b'));
+    new Chart(document.getElementById('networkChart'), chartConfig('Mbps', '#4d79ff'));
+});
+</script>
+{% endblock %}

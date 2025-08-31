@@ -1,0 +1,1090 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .profile-avatar {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .action-btn {
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-input {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            outline: none;
+        }
+
+        .tab-active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .notification-toast {
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
+        <div class="container mx-auto px-4 max-w-7xl">
+            <!-- Header Section -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Profile Management</h1>
+                <p class="text-gray-600">Manage your account settings and preferences</p>
+            </div>
+
+            <!-- Messages with Enhanced Styling -->
+            {% if messages %}
+                <div class="mb-6 space-y-3">
+                    {% for message in messages %}
+                        <div class="notification-toast {% if message.tags == 'success' %}bg-green-50 border-l-4 border-green-400 text-green-800{% elif message.tags == 'error' %}bg-red-50 border-l-4 border-red-400 text-red-800{% elif message.tags == 'warning' %}bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800{% else %}bg-blue-50 border-l-4 border-blue-400 text-blue-800{% endif %} px-6 py-4 rounded-lg shadow-md relative"
+                             role="alert">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    {% if message.tags == 'success' %}
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
+                                    {% elif message.tags == 'error' %}
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <p class="font-medium">{{ message }}</p>
+                                </div>
+                                <button type="button"
+                                        class="ml-auto flex-shrink-0 p-1 rounded-md hover:bg-gray-200 transition-colors"
+                                        onclick="this.closest('.notification-toast').remove()">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Main Profile Card -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+                <!-- Profile Header -->
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
+                    <div class="flex items-center space-x-6">
+                        <div class="relative">
+                            <img src="{{ user.profile.profile_picture.url }}"
+                                 alt="Profile Picture"
+                                 class="profile-avatar w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
+                            <div class="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-2 border-white"></div>
+                        </div>
+                        <div class="text-white">
+                            <h2 class="text-3xl font-bold">{{ user.get_full_name|default:user.username }}</h2>
+                            <p class="text-blue-100 mb-1">@{{ user.username }}</p>
+                            <p class="text-blue-200 text-sm">{{ user.email }}</p>
+                            {% if user.department %}
+                                <span class="inline-block bg-white bg-opacity-20 text-white text-xs px-3 py-1 rounded-full mt-2">
+                                {{ user.department }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="ml-auto">
+                            <div class="stats-card rounded-lg px-4 py-3 text-center">
+                                <div class="text-2xl font-bold">{{ user.date_joined|timesince }}</div>
+                                <div class="text-sm opacity-90">Member Since</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="border-b border-gray-200">
+                    <nav class="px-8 flex space-x-8">
+                        <button class="tab-button tab-active py-4 px-1 border-b-2 font-medium text-sm"
+                                onclick="showTab('profile-info')" id="tab-profile-info">
+                            Profile Information
+                        </button>
+                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm"
+                                onclick="showTab('edit-profile')" id="tab-edit-profile">
+                            Edit Profile
+                        </button>
+                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm"
+                                onclick="showTab('account-settings')" id="tab-account-settings">
+                            Account Settings
+                        </button>
+                        {% if request.user.is_staff %}
+                            <button class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm"
+                                    onclick="showTab('user-management')" id="tab-user-management">
+                                User Management
+                                <span class="ml-1 bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">{{ total_users }}</span>
+                            </button>
+                        {% endif %}
+                    </nav>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-8">
+                    <!-- Profile Information Tab -->
+                    <div id="profile-info" class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-6">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-4">Personal Information</h3>
+
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+                                    <p class="text-lg font-semibold text-gray-900">
+                                        {{ user.get_full_name|default:"Not provided" }}
+                                    </p>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
+                                    <p class="text-lg text-gray-900">{{ user.email }}</p>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Phone Number</label>
+                                    <p class="text-lg text-gray-900">{{ user.phone|default:"Not provided" }}</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-4">Account Details</h3>
+
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Department</label>
+                                    <p class="text-lg text-gray-900">{{ user.department|default:"Not assigned" }}</p>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Role</label>
+                                    <p class="text-lg text-gray-900">
+                                        {% if user.is_staff %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                      d="M9.664 1.319a.75.75 0 01.672 0 41.059 41.059 0 018.198 5.424.75.75 0 01-.254 1.285 31.372 31.372 0 00-7.86 3.83.75.75 0 01-.84 0 31.508 31.508 0 00-2.08-1.287V9.394c0-.244.116-.463.302-.592a35.504 35.504 0 013.305-2.033.75.75 0 00-.714-1.319 37 37 0 00-3.446 2.12A2.216 2.216 0 006 9.393v.38a31.293 31.293 0 00-4.28-1.746.75.75 0 01-.254-1.285 41.059 41.059 0 018.198-5.424zM6 11.459a29.848 29.848 0 00-2.455-1.158 41.029 41.029 0 00-.39 3.114.75.75 0 00.419.74c.528.256 1.046.53 1.554.82-.21-.899-.449-1.835-.728-2.516zM18 11.459a29.848 29.848 0 012.455-1.158 41.029 41.029 0 01.39 3.114.75.75 0 01-.419.74c-.528.256-1.046.53-1.554.82.21-.899.449-1.835.728-2.516z"
+                                                      clip-rule="evenodd"></path>
+                                            </svg>
+                                            Administrator
+                                        </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                                            </svg>
+                                            User
+                                        </span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Last Login</label>
+                                    <p class="text-lg text-gray-900">{{ user.last_login|date:"F d, Y P"|default:"Never" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Profile Tab -->
+                    <div id="edit-profile" class="tab-content hidden">
+                        <div class="max-w-2xl">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-6">Edit Your Profile</h3>
+
+                            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                                {% csrf_token %}
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                                               for="{{ user_form.username.id_for_label }}">
+                                            Username <span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            {{ user_form.username|add_class:"form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" }}
+                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                <svg class="w-5 h-5 text-gray-400" fill="currentColor"
+                                                     viewBox="0 0 20 20">
+                                                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        {% if user_form.username.errors %}
+                                            <p class="mt-1 text-sm text-red-600">{{ user_form.username.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                                               for="{{ user_form.email.id_for_label }}">
+                                            Email Address <span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            {{ user_form.email|add_class:"form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" }}
+                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                <svg class="w-5 h-5 text-gray-400" fill="currentColor"
+                                                     viewBox="0 0 20 20">
+                                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        {% if user_form.email.errors %}
+                                            <p class="mt-1 text-sm text-red-600">{{ user_form.email.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                                               for="{{ user_form.first_name.id_for_label }}">
+                                            First Name
+                                        </label>
+                                        {{ user_form.first_name|add_class:"form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" }}
+                                        {% if user_form.first_name.errors %}
+                                            <p class="mt-1 text-sm text-red-600">{{ user_form.first_name.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                                               for="{{ user_form.last_name.id_for_label }}">
+                                            Last Name
+                                        </label>
+                                        {{ user_form.last_name|add_class:"form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" }}
+                                        {% if user_form.last_name.errors %}
+                                            <p class="mt-1 text-sm text-red-600">{{ user_form.last_name.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                                               for="{{ user_form.department.id_for_label }}">
+                                            Department
+                                        </label>
+                                        {{ user_form.department|add_class:"form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" }}
+                                        {% if user_form.department.errors %}
+                                            <p class="mt-1 text-sm text-red-600">{{ user_form.department.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                                               for="{{ user_form.phone.id_for_label }}">
+                                            Phone Number
+                                        </label>
+                                        {{ user_form.phone|add_class:"form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" }}
+                                        {% if user_form.phone.errors %}
+                                            <p class="mt-1 text-sm text-red-600">{{ user_form.phone.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                                           for="{{ profile_form.profile_picture.id_for_label }}">
+                                        Profile Picture
+                                    </label>
+                                    <div class="mt-1 flex items-center space-x-4">
+                                        <img id="preview-image" src="{{ user.profile.profile_picture.url }}"
+                                             alt="Current profile picture"
+                                             class="w-16 h-16 rounded-full object-cover border-2 border-gray-300">
+                                        <div class="flex-1">
+                                            {{ profile_form.profile_picture|add_class:"form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" }}
+                                            {% if profile_form.profile_picture.errors %}
+                                                <p class="mt-1 text-sm text-red-600">{{ profile_form.profile_picture.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500">PNG, JPG, GIF up to 2MB</p>
+                                </div>
+
+                                <div class="flex justify-end space-x-4 pt-6">
+                                    <button type="button" onclick="showTab('profile-info')"
+                                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                                        Cancel
+                                    </button>
+                                    <button type="submit"
+                                            class="action-btn bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200">
+                                        <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
+                                        Update Profile
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Account Settings Tab -->
+                    <div id="account-settings" class="tab-content hidden">
+                        <div class="max-w-2xl space-y-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-6">Account Settings</h3>
+
+                            <!-- Security Section -->
+                            <!-- Security Section -->
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="text-lg font-medium text-gray-800 mb-4">Security</h4>
+                                <div class="space-y-4">
+                                    <!-- Change Password -->
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-900">Change Password</p>
+                                            <p class="text-sm text-gray-600">Update your account password</p>
+                                        </div>
+                                        <button onclick="changePassword()"
+                                                class="action-btn bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                            Change
+                                        </button>
+                                    </div>
+
+                                    <!-- Two-Factor Authentication -->
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-900">Two-Factor Authentication</p>
+                                            <p class="text-sm text-gray-600">Add an extra layer of security</p>
+                                        </div>
+                                        <button onclick="enableTwoFactor()"
+                                                class="action-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                            Enable
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Replace the Privacy Section with this updated version -->
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="text-lg font-medium text-gray-800 mb-4">Privacy</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-900">Profile Visibility</p>
+                                            <p class="text-sm text-gray-600">Control who can see your profile</p>
+                                        </div>
+                                        <select onchange="updateProfileVisibility(this.value)"
+                                                class="form-input border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+                                            <option value="public">Everyone</option>
+                                            <option value="team" selected>Team Members</option>
+                                            <option value="private">Private</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Account Actions -->
+                            <div class="bg-red-50 rounded-lg p-6">
+                                <h4 class="text-lg font-medium text-red-800 mb-4">Danger Zone</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-red-900">Download Account Data</p>
+                                            <p class="text-sm text-red-700">Export all your account information</p>
+                                        </div>
+                                        <button onclick="downloadAccountData()"
+                                                class="bg-red-100 hover:bg-red-200 text-red-800 font-medium py-2 px-4 rounded-lg transition-colors">
+                                            Download
+                                        </button>
+                                    </div>
+
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-red-900">Delete Account</p>
+                                            <p class="text-sm text-red-700">Permanently delete your account and data</p>
+                                        </div>
+                                        <button onclick="deleteOwnAccount()"
+                                                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management Tab (Admin Only) -->
+            {% if request.user.is_staff %}
+                <div id="user-management" class="tab-content hidden">
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-semibold text-gray-800">User Management</h3>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-sm text-gray-600">{{ total_users }} Total Users</span>
+                                <button class="action-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                    <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                    Add User
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Search and Filter -->
+                        <div class="bg-gray-50 rounded-lg p-4 flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-64">
+                                <input type="text" placeholder="Search users..."
+                                       class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                       onkeyup="filterUsers(this.value)">
+                            </div>
+                            <select class="form-input border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500"
+                                    onchange="filterUsersByRole(this.value)">
+                                <option value="">All Roles</option>
+                                <option value="admin">Administrators</option>
+                                <option value="user">Users</option>
+                            </select>
+                            <select class="form-input border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500"
+                                    onchange="filterUsersByStatus(this.value)">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <!-- Users Table -->
+                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200" id="users-table">
+                                    <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                            onclick="sortTable(0)">
+                                            <div class="flex items-center space-x-1">
+                                                <span>User</span>
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M5 12l5-5 5 5H5z"></path>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                            onclick="sortTable(1)">
+                                            <div class="flex items-center space-x-1">
+                                                <span>Email</span>
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M5 12l5-5 5 5H5z"></path>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Department
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Role
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Last Login
+                                        </th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for user_obj in all_users %}
+                                        <tr class="hover:bg-gray-50 transition-colors user-row"
+                                            data-username="{{ user_obj.username|lower }}"
+                                            data-email="{{ user_obj.email|lower }}"
+                                            data-role="{% if user_obj.is_staff %}admin{% else %}user{% endif %}"
+                                            data-status="{% if user_obj.is_active %}active{% else %}inactive{% endif %}">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <img class="h-10 w-10 rounded-full object-cover"
+                                                             src="{{ user_obj.profile.profile_picture.url }}"
+                                                             alt="{{ user_obj.username }}">
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">
+                                                            {{ user_obj.get_full_name|default:user_obj.username }}
+                                                        </div>
+                                                        <div class="text-sm text-gray-500">
+                                                            @{{ user_obj.username }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">{{ user_obj.email }}</div>
+                                                {% if user_obj.phone %}
+                                                    <div class="text-sm text-gray-500">{{ user_obj.phone }}</div>
+                                                {% endif %}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">
+                                                    {{ user_obj.department|default:"Not assigned" }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {% if user_obj.is_staff %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                            <svg class="w-3 h-3 mr-1" fill="currentColor"
+                                                                 viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd"
+                                                                      d="M9.664 1.319a.75.75 0 01.672 0 41.059 41.059 0 018.198 5.424.75.75 0 01-.254 1.285 31.372 31.372 0 00-7.86 3.83.75.75 0 01-.84 0 31.508 31.508 0 00-2.08-1.287V9.394c0-.244.116-.463.302-.592a35.504 35.504 0 013.305-2.033.75.75 0 00-.714-1.319 37 37 0 00-3.446 2.12A2.216 2.216 0 006 9.393v.38a31.293 31.293 0 00-4.28-1.746.75.75 0 01-.254-1.285 41.059 41.059 0 018.198-5.424zM6 11.459a29.848 29.848 0 00-2.455-1.158 41.029 41.029 0 00-.39 3.114.75.75 0 00.419.74c.528.256 1.046.53 1.554.82-.21-.899-.449-1.835-.728-2.516zM18 11.459a29.848 29.848 0 012.455-1.158 41.029 41.029 0 01.39 3.114.75.75 0 01-.419.74c-.528.256-1.046.53-1.554.82.21-.899.449-1.835.728-2.516z"
+                                                                      clip-rule="evenodd"></path>
+                                                            </svg>
+                                                            Admin
+                                                        </span>
+                                                {% else %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                            <svg class="w-3 h-3 mr-1" fill="currentColor"
+                                                                 viewBox="0 0 20 20">
+                                                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                                                            </svg>
+                                                            User
+                                                        </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {% if user_obj.is_active %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                            <div class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1"></div>
+                                                            Active
+                                                        </span>
+                                                {% else %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                            <div class="w-1.5 h-1.5 bg-red-400 rounded-full mr-1"></div>
+                                                            Inactive
+                                                        </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ user_obj.last_login|timesince|default:"Never" }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <div class="flex items-center justify-end space-x-2">
+                                                    <button onclick="viewUser({{ user_obj.pk }})"
+                                                            class="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded transition-colors"
+                                                            title="View User">
+                                                        <svg class="w-4 h-4" fill="currentColor"
+                                                             viewBox="0 0 20 20">
+                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                                            <path fill-rule="evenodd"
+                                                                  d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                                  clip-rule="evenodd"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <a href="{% url 'admin:members_customuser_change' user_obj.pk %}"
+                                                       target="_blank"
+                                                       class="text-indigo-600 hover:text-indigo-900 p-1 hover:bg-indigo-50 rounded transition-colors"
+                                                       title="Edit User">
+                                                        <svg class="w-4 h-4" fill="currentColor"
+                                                             viewBox="0 0 20 20">
+                                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                                                        </svg>
+                                                    </a>
+                                                    {% if user_obj != request.user %}
+                                                        <button onclick="toggleUserStatus({{ user_obj.pk }}, {{ user_obj.is_active|yesno:'false,true' }})"
+                                                                class="text-yellow-600 hover:text-yellow-900 p-1 hover:bg-yellow-50 rounded transition-colors"
+                                                                title="{% if user_obj.is_active %}Deactivate{% else %}Activate{% endif %} User">
+                                                            {% if user_obj.is_active %}
+                                                                <svg class="w-4 h-4" fill="currentColor"
+                                                                     viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd"
+                                                                          d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z"
+                                                                          clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            {% else %}
+                                                                <svg class="w-4 h-4" fill="currentColor"
+                                                                     viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd"
+                                                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                                          clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            {% endif %}
+                                                        </button>
+                                                        <button onclick="deleteUser({{ user_obj.pk }}, '{{ user_obj.username }}')"
+                                                                class="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded transition-colors"
+                                                                title="Delete User">
+                                                            <svg class="w-4 h-4" fill="currentColor"
+                                                                 viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd"
+                                                                      d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"
+                                                                      clip-rule="evenodd"></path>
+                                                                <path fill-rule="evenodd"
+                                                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                                      clip-rule="evenodd"></path>
+                                                            </svg>
+                                                        </button>
+                                                    {% else %}
+                                                        <span class="text-gray-400 cursor-not-allowed p-1"
+                                                              title="Cannot modify your own account">
+                                                                <svg class="w-4 h-4" fill="currentColor"
+                                                                     viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd"
+                                                                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                                                          clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </span>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7" class="px-6 py-12 text-center">
+                                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none"
+                                                     viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          stroke-width="2"
+                                                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                                </svg>
+                                                <h3 class="mt-2 text-sm font-medium text-gray-900">No users
+                                                    found</h3>
+                                                <p class="mt-1 text-sm text-gray-500">Get started by adding a
+                                                    new user.</p>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions Card -->
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
+                            <h4 class="text-lg font-medium text-gray-800 mb-4">Quick Actions</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <a href="{% url 'admin:members_customuser_changelist' %}" target="_blank"
+                                   class="action-btn bg-white hover:bg-gray-50 text-gray-800 font-medium py-3 px-4 rounded-lg border border-gray-200 text-center transition-all duration-200">
+                                    <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                    Admin Panel
+                                </a>
+                                <button onclick="exportUsers()"
+                                        class="action-btn bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg text-center transition-all duration-200">
+                                    <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                    Export CSV
+                                </button>
+                                <button onclick="exportUsersExcel()"
+                                        class="action-btn bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-4 rounded-lg text-center transition-all duration-200">
+                                    <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                    Export Excel
+                                </button>
+                                <button onclick="generateReport()"
+                                        class="action-btn bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-lg text-center transition-all duration-200">
+                                    <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- JavaScript for Enhanced Functionality -->
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('tab-active', 'border-green-500', 'text-green-600');
+                button.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Add active class to selected tab button
+            const activeButton = document.getElementById('tab-' + tabName);
+            activeButton.classList.add('tab-active', 'border-green-500', 'text-green-600');
+            activeButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+        }
+
+        // Profile Picture Preview
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileInput = document.querySelector('input[type="file"]');
+            const previewImage = document.getElementById('preview-image');
+
+            if (profileInput && previewImage) {
+                profileInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            previewImage.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        // User Management Functions
+        function filterUsers(searchTerm) {
+            const rows = document.querySelectorAll('.user-row');
+            rows.forEach(row => {
+                const username = row.dataset.username;
+                const email = row.dataset.email;
+                const shouldShow = username.includes(searchTerm.toLowerCase()) ||
+                    email.includes(searchTerm.toLowerCase());
+                row.style.display = shouldShow ? '' : 'none';
+            });
+        }
+
+        function filterUsersByRole(role) {
+            const rows = document.querySelectorAll('.user-row');
+            rows.forEach(row => {
+                const userRole = row.dataset.role;
+                const shouldShow = !role || userRole === role;
+                row.style.display = shouldShow ? '' : 'none';
+            });
+        }
+
+        function filterUsersByStatus(status) {
+            const rows = document.querySelectorAll('.user-row');
+            rows.forEach(row => {
+                const userStatus = row.dataset.status;
+                const shouldShow = !status || userStatus === status;
+                row.style.display = shouldShow ? '' : 'none';
+            });
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById('users-table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].textContent.trim();
+                const bText = b.cells[columnIndex].textContent.trim();
+                return aText.localeCompare(bText);
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function viewUser(userId) {
+            // Fetch user details and show in modal or navigate to detail page
+            fetch(`/members/view-user/${userId}/`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.user) {
+                        showUserModal(data.user);
+                    } else {
+                        showNotification('Unable to load user details.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('An error occurred while loading user details.', 'error');
+                });
+        }
+
+        function showUserModal(user) {
+            // Create and show user detail modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">User Details</h3>
+                <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <div><strong>Username:</strong> ${user.username}</div>
+                <div><strong>Email:</strong> ${user.email}</div>
+                <div><strong>Full Name:</strong> ${user.full_name || 'Not provided'}</div>
+                <div><strong>Department:</strong> ${user.department || 'Not assigned'}</div>
+                <div><strong>Phone:</strong> ${user.phone || 'Not provided'}</div>
+                <div><strong>Status:</strong> ${user.is_active ? 'Active' : 'Inactive'}</div>
+                <div><strong>Role:</strong> ${user.is_staff ? 'Administrator' : 'User'}</div>
+                <div><strong>Joined:</strong> ${user.date_joined || 'Unknown'}</div>
+                <div><strong>Last Login:</strong> ${user.last_login || 'Never'}</div>
+            </div>
+        </div>
+    `;
+            document.body.appendChild(modal);
+        }
+
+        function toggleUserStatus(userId, newStatus) {
+            if (confirm('Are you sure you want to change this user\'s status?')) {
+                fetch(`/members/toggle-user-status/${userId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        'new_status': newStatus
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showNotification(data.message, 'success');
+                            // Reload page to reflect changes
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            showNotification(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('An error occurred while updating user status.', 'error');
+                    });
+            }
+        }
+
+        function deleteUser(userId, username) {
+            if (confirm(`Are you sure you want to delete user "${username}"? This action cannot be undone.`)) {
+                window.location.href = `/members/delete-user/${userId}/`;
+            }
+        }
+
+        function exportUsers() {
+            showNotification('Preparing user export...', 'info');
+            window.location.href = '/members/export-users/';
+        }
+
+        function exportUsersExcel() {
+            showNotification('Preparing Excel export...', 'info');
+            window.location.href = '/members/export-excel/';
+        }
+
+        function generateReport() {
+            showNotification('Generating comprehensive report...', 'info');
+            window.open('/members/generate-report/', '_blank');
+        }
+
+        function downloadAccountData() {
+            showNotification('Preparing your account data for download...', 'info');
+            window.location.href = '/members/download-account-data/';
+        }
+
+        function changePassword() {
+            window.location.href = '/members/change-password/';
+        }
+
+        function enableTwoFactor() {
+            window.location.href = '/members/enable-2fa/';
+        }
+
+        function updateProfileVisibility(visibility) {
+            fetch('/members/update-visibility/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `profile_visibility=${visibility}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification(data.message, 'success');
+                    } else {
+                        showNotification('Failed to update visibility settings.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('An error occurred while updating settings.', 'error');
+                });
+        }
+
+        function deleteOwnAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                const password = prompt('Please enter your password to confirm account deletion:');
+                if (password) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/members/delete-own-account/';
+
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = getCookie('csrftoken');
+
+                    const passwordInput = document.createElement('input');
+                    passwordInput.type = 'hidden';
+                    passwordInput.name = 'password';
+                    passwordInput.value = password;
+
+                    form.appendChild(csrfInput);
+                    form.appendChild(passwordInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            }
+        }
+
+        // Utility Functions
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full`;
+
+            // Set colors based on type
+            const colors = {
+                success: 'bg-green-100 border border-green-400 text-green-800',
+                error: 'bg-red-100 border border-red-400 text-red-800',
+                warning: 'bg-yellow-100 border border-yellow-400 text-yellow-800',
+                info: 'bg-blue-100 border border-blue-400 text-blue-800'
+            };
+
+            notification.className += ` ${colors[type] || colors.info}`;
+            notification.innerHTML = `
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                ${getNotificationIcon(type)}
+            </div>
+            <div class="ml-3">
+                <p class="font-medium">${message}</p>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+    `;
+
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                success: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>`,
+                error: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+       </svg>`,
+                warning: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+           <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+         </svg>`,
+                info: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+      </svg>`
+            };
+
+            return icons[type] || icons.info;
+        }
+    </script>
+{% endblock %}
