@@ -1,0 +1,498 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center">
+                    <a href="{% url 'messages:dashboard' %}"
+                       class="text-gray-600 hover:text-gray-900 mr-4">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        <i class="fas fa-bell text-yellow-600 mr-3"></i>Notifications
+                    </h1>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <select id="filter-type"
+                                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                            <option value="">All Types</option>
+                            <option value="asset_alert">Asset Alerts</option>
+                            <option value="maintenance_due">Maintenance Due</option>
+                            <option value="license_expiring">License Expiring</option>
+                            <option value="warranty_expiring">Warranty Expiring</option>
+                            <option value="intervention_created">Interventions</option>
+                            <option value="system_update">System Updates</option>
+                        </select>
+                    </div>
+
+                    {% if user.role == 'admin' %}
+                    <a href="{% url 'messages:create_notification' %}"
+                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-plus mr-2"></i>Create Notification
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Critical Alerts</div>
+                        <div class="text-2xl font-bold text-gray-900" id="critical-count">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-wrench text-orange-500 text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Maintenance Due</div>
+                        <div class="text-2xl font-bold text-gray-900" id="maintenance-count">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-key text-blue-500 text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Licenses Expiring</div>
+                        <div class="text-2xl font-bold text-gray-900" id="license-count">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-green-500 text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Total Active</div>
+                        <div class="text-2xl font-bold text-gray-900" id="total-count">{{ notifications|length }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-900">System Notifications</h2>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-500">{{ notifications|length }} notification{{ notifications|length|pluralize }}</span>
+                        <button onclick="markAllAsRead()"
+                                class="text-sm text-green-600 hover:text-green-800 font-medium">
+                            Mark all as read
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divide-y divide-gray-200" id="notifications-list">
+                {% for notification in notifications %}
+                <div class="notification-item px-6 py-4 hover:bg-gray-50 transition duration-200"
+                     data-type="{{ notification.notification_type }}"
+                     data-id="{{ notification.id }}">
+                    <div class="flex items-start">
+                        <!-- Icon -->
+                        <div class="flex-shrink-0 mr-4">
+                            {% if notification.notification_type == 'asset_alert' %}
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                                </div>
+                            {% elif notification.notification_type == 'maintenance_due' %}
+                                <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-wrench text-orange-600"></i>
+                                </div>
+                            {% elif notification.notification_type == 'license_expiring' %}
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-key text-blue-600"></i>
+                                </div>
+                            {% elif notification.notification_type == 'warranty_expiring' %}
+                                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-purple-600"></i>
+                                </div>
+                            {% elif notification.notification_type == 'intervention_created' or notification.notification_type == 'intervention_updated' %}
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-tools text-green-600"></i>
+                                </div>
+                            {% else %}
+                                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-info-circle text-gray-600"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-sm font-medium text-gray-900">
+                                        {{ notification.title }}
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        {{ notification.message }}
+                                    </p>
+
+                                    <!-- Related Object Info -->
+                                    {% if notification.related_equipment %}
+                                    <div class="flex items-center mt-2 text-xs text-gray-500">
+                                        <i class="fas fa-desktop mr-1"></i>
+                                        <span>Equipment: {{ notification.related_equipment.name }}</span>
+                                    </div>
+                                    {% elif notification.related_intervention %}
+                                    <div class="flex items-center mt-2 text-xs text-gray-500">
+                                        <i class="fas fa-tools mr-1"></i>
+                                        <span>Intervention: {{ notification.related_intervention.title }}</span>
+                                    </div>
+                                    {% elif notification.related_license %}
+                                    <div class="flex items-center mt-2 text-xs text-gray-500">
+                                        <i class="fas fa-key mr-1"></i>
+                                        <span>License: {{ notification.related_license.software.name }}</span>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Timestamp and Type -->
+                                    <div class="flex items-center mt-2 space-x-4 text-xs text-gray-400">
+                                        <span>{{ notification.created_at|timesince }} ago</span>
+                                        <span class="capitalize">{{ notification.get_notification_type_display }}</span>
+                                        {% if notification.expires_at %}
+                                        <span>Expires: {{ notification.expires_at|date:"M d, Y H:i" }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="flex items-center space-x-2 ml-4">
+                                    {% if notification.action_url and notification.action_text %}
+                                    <a href="{{ notification.action_url }}"
+                                       class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700">
+                                        {{ notification.action_text }}
+                                    </a>
+                                    {% endif %}
+
+                                    <div class="relative">
+                                        <button onclick="toggleNotificationMenu({{ forloop.counter }})"
+                                                class="p-1 text-gray-400 hover:text-gray-600">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+
+                                        <!-- Dropdown Menu -->
+                                        <div id="notification-menu-{{ forloop.counter }}"
+                                             class="hidden absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                            <div class="py-1">
+                                                <button onclick="markAsRead('{{ notification.id }}')"
+                                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    Mark as read
+                                                </button>
+                                                {% if user.role == 'admin' %}
+                                                <button onclick="archiveNotification('{{ notification.id }}')"
+                                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    Archive
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="px-6 py-12 text-center">
+                    <i class="fas fa-check-circle text-green-500 text-6xl mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">All caught up!</h3>
+                    <p class="text-gray-600">No notifications to display.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if notifications.has_other_pages %}
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <nav class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700">
+                            Showing {{ notifications.start_index }} to {{ notifications.end_index }}
+                            of {{ notifications.paginator.count }} notifications
+                        </span>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        {% if notifications.has_previous %}
+                        <a href="?page={{ notifications.previous_page_number }}"
+                           class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50">
+                            Previous
+                        </a>
+                        {% endif %}
+
+                        <span class="px-3 py-1 text-sm bg-green-600 text-white rounded">
+                            {{ notifications.number }}
+                        </span>
+
+                        {% if notifications.has_next %}
+                        <a href="?page={{ notifications.next_page_number }}"
+                           class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50">
+                            Next
+                        </a>
+                        {% endif %}
+                    </div>
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Real-time Notifications -->
+<div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Update statistics
+    updateStatistics();
+
+    // Filter functionality
+    const filterSelect = document.getElementById('filter-type');
+    filterSelect.addEventListener('change', filterNotifications);
+
+    // WebSocket for real-time updates
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/notifications/`;
+    let socket = null;
+
+    function connectWebSocket() {
+        socket = new WebSocket(wsUrl);
+
+        socket.onopen = function(e) {
+            console.log('Connected to notifications WebSocket');
+        };
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            handleRealTimeNotification(data);
+        };
+
+        socket.onclose = function(e) {
+            console.log('Notifications WebSocket disconnected, reconnecting...');
+            setTimeout(connectWebSocket, 3000);
+        };
+    }
+
+    function handleRealTimeNotification(data) {
+        // Add new notification to the list
+        addNotificationToList(data);
+
+        // Show toast
+        showToast(data.title || 'New Notification', data.message, 'info');
+
+        // Update statistics
+        updateStatistics();
+    }
+
+    function addNotificationToList(notification) {
+        const notificationsList = document.getElementById('notifications-list');
+        const newNotificationHtml = createNotificationHTML(notification);
+        notificationsList.insertAdjacentHTML('afterbegin', newNotificationHtml);
+    }
+
+    function createNotificationHTML(notification) {
+        // Simplified notification HTML creation
+        return `
+            <div class="notification-item px-6 py-4 hover:bg-gray-50 transition duration-200 border-l-4 border-blue-500"
+                 data-type="${notification.notification_type}"
+                 data-id="${notification.id}">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 mr-4">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-bell text-blue-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-medium text-gray-900">${notification.title}</h3>
+                        <p class="text-sm text-gray-600 mt-1">${notification.message}</p>
+                        <div class="text-xs text-gray-400 mt-2">Just now • New</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Connect WebSocket
+    connectWebSocket();
+});
+
+function updateStatistics() {
+    const notifications = document.querySelectorAll('.notification-item');
+    let criticalCount = 0;
+    let maintenanceCount = 0;
+    let licenseCount = 0;
+    let totalCount = notifications.length;
+
+    notifications.forEach(notification => {
+        const type = notification.dataset.type;
+        if (type === 'asset_alert') criticalCount++;
+        if (type === 'maintenance_due') maintenanceCount++;
+        if (type === 'license_expiring' || type === 'warranty_expiring') licenseCount++;
+    });
+
+    document.getElementById('critical-count').textContent = criticalCount;
+    document.getElementById('maintenance-count').textContent = maintenanceCount;
+    document.getElementById('license-count').textContent = licenseCount;
+    document.getElementById('total-count').textContent = totalCount;
+}
+
+function filterNotifications() {
+    const filterValue = document.getElementById('filter-type').value;
+    const notifications = document.querySelectorAll('.notification-item');
+
+    notifications.forEach(notification => {
+        const type = notification.dataset.type;
+        if (!filterValue || type === filterValue) {
+            notification.style.display = 'block';
+        } else {
+            notification.style.display = 'none';
+        }
+    });
+}
+
+function toggleNotificationMenu(index) {
+    const menu = document.getElementById(`notification-menu-${index}`);
+    const allMenus = document.querySelectorAll('[id^="notification-menu-"]');
+
+    // Close other menus
+    allMenus.forEach(m => {
+        if (m !== menu) m.classList.add('hidden');
+    });
+
+    // Toggle current menu
+    menu.classList.toggle('hidden');
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function closeMenu(e) {
+        if (!menu.contains(e.target)) {
+            menu.classList.add('hidden');
+            document.removeEventListener('click', closeMenu);
+        }
+    });
+}
+
+function markAsRead(notificationId) {
+    fetch(`/messages/api/notification/${notificationId}/read/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const notification = document.querySelector(`[data-id="${notificationId}"]`);
+            if (notification) {
+                notification.classList.add('opacity-50');
+                notification.querySelector('.border-l-4')?.classList.remove('border-blue-500');
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function markAllAsRead() {
+    const notifications = document.querySelectorAll('.notification-item');
+    notifications.forEach(notification => {
+        const id = notification.dataset.id;
+        markAsRead(id);
+    });
+}
+
+function archiveNotification(notificationId) {
+    if (confirm('Archive this notification?')) {
+        fetch(`/messages/api/notification/${notificationId}/archive/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const notification = document.querySelector(`[data-id="${notificationId}"]`);
+                if (notification) {
+                    notification.remove();
+                    updateStatistics();
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+function showToast(title, message, type) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+
+    const bgColor = type === 'error' ? 'bg-red-600' : type === 'warning' ? 'bg-yellow-600' : 'bg-green-600';
+
+    toast.className = `${bgColor} text-white px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+    toast.innerHTML = `
+        <div class="flex items-start">
+            <div class="flex-1">
+                <div class="font-medium">${title}</div>
+                <div class="text-sm opacity-90 mt-1">${message}</div>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.remove('translate-x-full');
+    }, 100);
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+// Close menus when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.relative')) {
+        document.querySelectorAll('[id^="notification-menu-"]').forEach(menu => {
+            menu.classList.add('hidden');
+        });
+    }
+});
+</script>
+{% endblock %}

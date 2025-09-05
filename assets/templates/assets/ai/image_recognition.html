@@ -1,0 +1,542 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Image Recognition - Asset Management{% endblock %}
+
+{% block page_title %}AI Image Recognition{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-4">
+                <i class="fas fa-camera text-white text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">AI-Powered Asset Recognition</h1>
+                <p class="text-gray-600">Upload images to automatically identify and categorize equipment</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-file-image text-green-600 mr-2"></i>
+                    <span class="font-medium text-gray-900">Supported Formats</span>
+                </div>
+                <p class="text-sm text-gray-600">
+                    {% for format in supported_formats %}
+                        {{ format|upper }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-weight text-green-600 mr-2"></i>
+                    <span class="font-medium text-gray-900">Max File Size</span>
+                </div>
+                <p class="text-sm text-gray-600">{{ max_file_size }}</p>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-robot text-green-600 mr-2"></i>
+                    <span class="font-medium text-gray-900">AI Analysis</span>
+                </div>
+                <p class="text-sm text-gray-600">Automatic categorization & specs</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-cloud-upload-alt mr-2 text-blue-600"></i>Upload Equipment Image
+            </h2>
+        </div>
+
+        <div class="p-6">
+            <!-- Drag & Drop Upload Area -->
+            <div id="upload-zone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-500 transition-colors cursor-pointer">
+                <div id="upload-content">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Drop your image here</h3>
+                    <p class="text-gray-600 mb-4">or click to select a file</p>
+                    <button type="button" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition duration-200">
+                        Choose File
+                    </button>
+                </div>
+
+                <!-- Preview Area (hidden initially) -->
+                <div id="image-preview" class="hidden">
+                    <img id="preview-image" src="" alt="Preview" class="max-w-full max-h-64 mx-auto rounded-lg shadow-lg mb-4">
+                    <div class="flex items-center justify-center space-x-4">
+                        <button id="analyze-btn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition duration-200">
+                            <i class="fas fa-robot mr-2"></i>Analyze Image
+                        </button>
+                        <button id="remove-image" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition duration-200">
+                            <i class="fas fa-trash mr-2"></i>Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden file input -->
+            <input type="file" id="file-input" accept="image/*" class="hidden">
+
+            <!-- Progress Bar -->
+            <div id="upload-progress" class="hidden mt-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-gray-600">Uploading...</span>
+                    <span id="progress-percent" class="text-sm text-gray-600">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progress-bar" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Results Section -->
+    <div id="analysis-results" class="bg-white rounded-lg shadow hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-chart-line mr-2 text-purple-600"></i>Analysis Results
+            </h2>
+        </div>
+
+        <div class="p-6">
+            <!-- Category Result -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-md font-medium text-gray-900">Identified Category</h3>
+                    <span id="confidence-badge" class="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800"></span>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex items-center">
+                        <i id="category-icon" class="fas fa-desktop text-2xl text-blue-600 mr-4"></i>
+                        <div>
+                            <div id="category-name" class="font-semibold text-gray-900">-</div>
+                            <div id="category-reasoning" class="text-sm text-gray-600">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extracted Specifications -->
+            <div id="specs-section" class="mb-6 hidden">
+                <h3 class="text-md font-medium text-gray-900 mb-3">Extracted Specifications</h3>
+                <div id="specs-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Specs will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- AI Suggestions -->
+            <div id="suggestions-section" class="mb-6 hidden">
+                <h3 class="text-md font-medium text-gray-900 mb-3">AI Recommendations</h3>
+                <div id="suggestions-list" class="space-y-2">
+                    <!-- Suggestions will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="action-buttons" class="flex flex-wrap gap-3 hidden">
+                <button id="create-equipment" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition duration-200">
+                    <i class="fas fa-plus mr-2"></i>Create Equipment Entry
+                </button>
+                <button id="save-analysis" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium transition duration-200">
+                    <i class="fas fa-save mr-2"></i>Save Analysis
+                </button>
+                <button id="analyze-another" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition duration-200">
+                    <i class="fas fa-redo mr-2"></i>Analyze Another
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Analyses -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-history mr-2 text-gray-600"></i>Recent Image Analyses
+            </h2>
+        </div>
+
+        <div class="p-6">
+            <div id="recent-analyses" class="space-y-4">
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-camera text-3xl mb-4"></i>
+                    <p>No recent analyses yet</p>
+                    <p class="text-sm">Upload an image to get started</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div id="error-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <div class="text-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-4"></i>
+            <h3 class="text-lg font-semibold mb-2 text-gray-900">Upload Error</h3>
+            <p id="error-message" class="text-gray-600 mb-4">An error occurred during upload.</p>
+            <button onclick="closeErrorModal()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadZone = document.getElementById('upload-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadContent = document.getElementById('upload-content');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImage = document.getElementById('preview-image');
+    const uploadProgress = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const progressPercent = document.getElementById('progress-percent');
+    const analysisResults = document.getElementById('analysis-results');
+
+    let currentFile = null;
+    let currentAnalysis = null;
+
+    // Category icons mapping
+    const categoryIcons = {
+        'desktop': 'fas fa-desktop',
+        'laptop': 'fas fa-laptop',
+        'server': 'fas fa-server',
+        'network': 'fas fa-network-wired',
+        'printer': 'fas fa-print',
+        'monitor': 'fas fa-tv',
+        'ups': 'fas fa-plug',
+        'peripheral': 'fas fa-keyboard',
+        'other': 'fas fa-question-circle'
+    };
+
+    // File input and drag & drop handlers
+    uploadZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFileSelect);
+
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('border-green-500', 'bg-green-50');
+    });
+
+    uploadZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('border-green-500', 'bg-green-50');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('border-green-500', 'bg-green-50');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
+
+    document.getElementById('analyze-btn').addEventListener('click', analyzeImage);
+    document.getElementById('remove-image').addEventListener('click', removeImage);
+    document.getElementById('create-equipment').addEventListener('click', createEquipmentEntry);
+    document.getElementById('analyze-another').addEventListener('click', analyzeAnother);
+
+    function handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            handleFile(file);
+        }
+    }
+
+    function handleFile(file) {
+        // Validate file type
+        const allowedTypes = {{ supported_formats|safe }}.map(format => `image/${format === 'jpg' ? 'jpeg' : format}`);
+        if (!allowedTypes.includes(file.type)) {
+            showError(`Please select a valid image file (${allowedTypes.join(', ')})`);
+            return;
+        }
+
+        // Validate file size (10MB = 10 * 1024 * 1024 bytes)
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+            showError('File size must be less than {{ max_file_size }}');
+            return;
+        }
+
+        currentFile = file;
+
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            uploadContent.classList.add('hidden');
+            imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function analyzeImage() {
+        if (!currentFile) return;
+
+        // Show AI processing modal
+        showAIModal('Analyzing Image...', 'Processing image with AI recognition...');
+
+        const formData = new FormData();
+        formData.append('image', currentFile);
+
+        // Simulate progress
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress >= 90) {
+                clearInterval(progressInterval);
+            }
+            updateAIProgress(progress, 'Analyzing image features...');
+        }, 200);
+
+        fetch('/assets/api/image-recognition/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            clearInterval(progressInterval);
+            updateAIProgress(100, 'Analysis complete!');
+
+            setTimeout(() => {
+                closeAIModal();
+                if (data.success) {
+                    displayResults(data.result);
+                } else {
+                    showError(data.error || 'Analysis failed');
+                }
+            }, 1000);
+        })
+        .catch(error => {
+            clearInterval(progressInterval);
+            closeAIModal();
+            console.error('Error:', error);
+            showError('Network error occurred during analysis');
+        });
+    }
+
+    function displayResults(result) {
+        currentAnalysis = result;
+
+        // Show results section
+        analysisResults.classList.remove('hidden');
+        analysisResults.scrollIntoView({ behavior: 'smooth' });
+
+        // Update category display
+        const categoryName = document.getElementById('category-name');
+        const categoryIcon = document.getElementById('category-icon');
+        const categoryReasoning = document.getElementById('category-reasoning');
+        const confidenceBadge = document.getElementById('confidence-badge');
+
+        categoryName.textContent = result.category.charAt(0).toUpperCase() + result.category.slice(1) + ' Equipment';
+        categoryIcon.className = categoryIcons[result.category] || categoryIcons['other'];
+        categoryReasoning.textContent = result.reasoning || 'AI analysis reasoning not provided';
+
+        // Update confidence badge
+        const confidence = Math.round(result.confidence * 100);
+        confidenceBadge.textContent = `${confidence}% Confidence`;
+
+        if (confidence >= 80) {
+            confidenceBadge.className = 'px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800';
+        } else if (confidence >= 60) {
+            confidenceBadge.className = 'px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800';
+        } else {
+            confidenceBadge.className = 'px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-800';
+        }
+
+        // Display extracted specifications
+        if (result.extracted_specs && Object.keys(result.extracted_specs).length > 0) {
+            displaySpecs(result.extracted_specs);
+        }
+
+        // Display suggestions
+        if (result.suggestions && result.suggestions.length > 0) {
+            displaySuggestions(result.suggestions);
+        }
+
+        // Show action buttons
+        document.getElementById('action-buttons').classList.remove('hidden');
+
+        // Add to recent analyses
+        addToRecentAnalyses(result);
+    }
+
+    function displaySpecs(specs) {
+        const specsSection = document.getElementById('specs-section');
+        const specsGrid = document.getElementById('specs-grid');
+
+        specsGrid.innerHTML = '';
+
+        Object.entries(specs).forEach(([key, value]) => {
+            const specCard = document.createElement('div');
+            specCard.className = 'bg-gray-50 p-3 rounded-lg';
+            specCard.innerHTML = `
+                <div class="text-sm font-medium text-gray-900">${formatSpecKey(key)}</div>
+                <div class="text-lg font-bold text-blue-600">${formatSpecValue(key, value)}</div>
+            `;
+            specsGrid.appendChild(specCard);
+        });
+
+        specsSection.classList.remove('hidden');
+    }
+
+    function displaySuggestions(suggestions) {
+        const suggestionsSection = document.getElementById('suggestions-section');
+        const suggestionsList = document.getElementById('suggestions-list');
+
+        suggestionsList.innerHTML = '';
+
+        suggestions.forEach(suggestion => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'flex items-start p-3 bg-blue-50 rounded-lg';
+            suggestionItem.innerHTML = `
+                <i class="fas fa-lightbulb text-blue-600 mr-3 mt-0.5"></i>
+                <span class="text-sm text-gray-700">${suggestion}</span>
+            `;
+            suggestionsList.appendChild(suggestionItem);
+        });
+
+        suggestionsSection.classList.remove('hidden');
+    }
+
+    function formatSpecKey(key) {
+        const keyMap = {
+            'ram_gb': 'RAM',
+            'ssd_gb': 'SSD Storage',
+            'hdd_gb': 'HDD Storage',
+            'cpu_info': 'CPU',
+            'screen_size_inches': 'Screen Size',
+            'network_speed_gbps': 'Network Speed',
+            'network_speed_mbps': 'Network Speed'
+        };
+        return keyMap[key] || key.replace('_', ' ').toUpperCase();
+    }
+
+    function formatSpecValue(key, value) {
+        if (key.includes('gb')) {
+            return `${value} GB`;
+        } else if (key.includes('ghz')) {
+            return `${value} GHz`;
+        } else if (key.includes('inches')) {
+            return `${value}"`;
+        } else if (key.includes('gbps')) {
+            return `${value} Gbps`;
+        } else if (key.includes('mbps')) {
+            return `${value} Mbps`;
+        }
+        return value;
+    }
+
+    function createEquipmentEntry() {
+        if (!currentAnalysis) return;
+
+        // Create URL with analysis data as query parameters
+        const params = new URLSearchParams({
+            category: currentAnalysis.category,
+            name: `New ${currentAnalysis.category} Equipment`,
+            ai_analysis: JSON.stringify(currentAnalysis)
+        });
+
+        window.location.href = `/assets/equipment/add/?${params.toString()}`;
+    }
+
+    function removeImage() {
+        currentFile = null;
+        currentAnalysis = null;
+        fileInput.value = '';
+        uploadContent.classList.remove('hidden');
+        imagePreview.classList.add('hidden');
+        analysisResults.classList.add('hidden');
+        previewImage.src = '';
+    }
+
+    function analyzeAnother() {
+        removeImage();
+        // Scroll back to upload section
+        uploadZone.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function addToRecentAnalyses(analysis) {
+        const recentAnalyses = document.getElementById('recent-analyses');
+
+        // Remove "no analyses" message if present
+        if (recentAnalyses.children.length === 1 && recentAnalyses.children[0].classList.contains('text-center')) {
+            recentAnalyses.innerHTML = '';
+        }
+
+        const analysisCard = document.createElement('div');
+        analysisCard.className = 'flex items-center p-4 bg-gray-50 rounded-lg';
+        analysisCard.innerHTML = `
+            <i class="${categoryIcons[analysis.category] || categoryIcons['other']} text-2xl text-blue-600 mr-4"></i>
+            <div class="flex-1">
+                <div class="font-medium text-gray-900">${analysis.category.charAt(0).toUpperCase() + analysis.category.slice(1)} Equipment</div>
+                <div class="text-sm text-gray-600">Confidence: ${Math.round(analysis.confidence * 100)}%</div>
+                <div class="text-xs text-gray-500">${new Date().toLocaleString()}</div>
+            </div>
+            <div class="px-3 py-1 text-xs font-medium rounded-full ${analysis.confidence >= 0.8 ? 'bg-green-100 text-green-800' : analysis.confidence >= 0.6 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">
+                ${Math.round(analysis.confidence * 100)}%
+            </div>
+        `;
+
+        // Add to top of list
+        recentAnalyses.insertBefore(analysisCard, recentAnalyses.firstChild);
+
+        // Limit to 5 recent analyses
+        while (recentAnalyses.children.length > 5) {
+            recentAnalyses.removeChild(recentAnalyses.lastChild);
+        }
+    }
+
+    function showError(message) {
+        document.getElementById('error-message').textContent = message;
+        document.getElementById('error-modal').classList.remove('hidden');
+    }
+
+    function closeErrorModal() {
+        document.getElementById('error-modal').classList.add('hidden');
+    }
+
+    // Expose to global scope for modal close button
+    window.closeErrorModal = closeErrorModal;
+
+    // Load recent analyses on page load
+    loadRecentAnalyses();
+});
+
+function loadRecentAnalyses() {
+    // This could load from localStorage or make an API call
+    // For now, we'll just show the placeholder message
+    console.log('Loading recent analyses...');
+}
+
+// Utility function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

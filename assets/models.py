@@ -160,6 +160,30 @@ class Equipment(models.Model):
             return date.today().year - self.purchase_date.year
         return None
 
+    def get_health_analysis(self):
+        """Get AI-powered health analysis"""
+        from assets.predictive_maintenance import PredictiveMaintenanceService
+        service = PredictiveMaintenanceService()
+        return service.analyze_equipment_health(self.id)
+
+    def auto_categorize(self):
+        """Auto-categorize using AI"""
+        from assets.ai_services import auto_categorize_equipment
+        return auto_categorize_equipment(self.id)
+
+    def get_message_thread(self):
+        """Get or create message thread for this equipment"""
+        from messages.models import MessageThread
+        thread, created = MessageThread.objects.get_or_create(
+            related_equipment=self,
+            defaults={
+                'thread_type': 'group',
+                'title': f'Equipment: {self.name}',
+                'created_by': self.created_by or self.assigned_to,
+            }
+        )
+        return thread
+
 
 class Software(models.Model):
     """Software applications and systems"""

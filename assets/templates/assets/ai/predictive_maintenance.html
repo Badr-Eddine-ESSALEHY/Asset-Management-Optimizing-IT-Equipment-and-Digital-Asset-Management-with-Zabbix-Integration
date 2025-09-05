@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Predictive Maintenance - OCP Asset Management{% endblock %}
+
+{% block page_title %}Predictive Maintenance Analysis{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">AI-Powered Predictive Maintenance</h2>
+                <p class="text-gray-600 mt-2">Monitor equipment health and predict maintenance needs using machine learning</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="runBulkHealthAnalysis()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                    <i class="fas fa-heartbeat mr-2"></i>Run Bulk Analysis
+                </button>
+                <button onclick="refreshAnalysis()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                    <i class="fas fa-sync-alt mr-2"></i>Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="bg-white rounded-lg shadow p-4">
+        <form method="GET" class="flex items-center space-x-4">
+            <div class="flex-1">
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Search equipment..."
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+                <select name="risk" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="all">All Risk Levels</option>
+                    {% for risk in risk_choices %}
+                        <option value="{{ risk }}" {% if risk == risk_filter %}selected{% endif %}>
+                            {{ risk|title }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                <i class="fas fa-search mr-2"></i>Filter
+            </button>
+        </form>
+    </div>
+
+    <!-- Equipment Analysis Results -->
+    <div class="grid grid-cols-1 gap-6">
+        {% for analysis in analyses %}
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <div class="flex items-start justify-between">
+                        <!-- Equipment Info -->
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <i class="fas fa-desktop text-2xl text-gray-500"></i>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800">{{ analysis.equipment.name }}</h3>
+                                    <p class="text-sm text-gray-600">{{ analysis.equipment.asset_tag }} • {{ analysis.equipment.get_category_display }}</p>
+                                </div>
+                            </div>
+
+                            {% if analysis.analysis.error %}
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                                        <span class="text-red-700">{{ analysis.analysis.error }}</span>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <!-- Health Score -->
+                                <div class="mb-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium text-gray-600">Health Score</span>
+                                        <span class="text-sm font-bold
+                                            {% if analysis.analysis.health_score >= 80 %}text-green-600
+                                            {% elif analysis.analysis.health_score >= 60 %}text-yellow-600
+                                            {% elif analysis.analysis.health_score >= 40 %}text-orange-600
+                                            {% else %}text-red-600{% endif %}">
+                                            {{ analysis.analysis.health_score|floatformat:1 }}/100
+                                        </span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="h-2 rounded-full
+                                            {% if analysis.analysis.health_score >= 80 %}bg-green-500
+                                            {% elif analysis.analysis.health_score >= 60 %}bg-yellow-500
+                                            {% elif analysis.analysis.health_score >= 40 %}bg-orange-500
+                                            {% else %}bg-red-500{% endif %}"
+                                             style="width: {{ analysis.analysis.health_score }}%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Risk Level -->
+                                <div class="mb-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                        {% if analysis.analysis.risk_level == 'low' %}bg-green-100 text-green-800
+                                        {% elif analysis.analysis.risk_level == 'medium' %}bg-yellow-100 text-yellow-800
+                                        {% elif analysis.analysis.risk_level == 'high' %}bg-orange-100 text-orange-800
+                                        {% elif analysis.analysis.risk_level == 'critical' %}bg-red-100 text-red-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        <i class="fas fa-circle mr-2 text-xs"></i>
+                                        {{ analysis.analysis.risk_level|title }} Risk
+                                    </span>
+                                </div>
+
+                                <!-- Predicted Failure Date -->
+                                {% if analysis.analysis.predicted_failure_date %}
+                                    <div class="mb-4">
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <i class="fas fa-calendar-exclamation mr-2"></i>
+                                            Predicted maintenance needed by:
+                                            <span class="font-medium ml-1">{{ analysis.analysis.predicted_failure_date|date:"M d, Y" }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex flex-col space-y-2 ml-6">
+                            <a href="{% url 'assets:equipment_detail' analysis.equipment.id %}"
+                               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm text-center">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </a>
+                            {% if not analysis.analysis.error %}
+                                <button onclick="viewDetailedAnalysis({{ analysis.equipment.id }})"
+                                        class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm">
+                                    <i class="fas fa-chart-line mr-1"></i>Analysis
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if not analysis.analysis.error %}
+                        <!-- Expandable Sections -->
+                        <div class="mt-4 space-y-3">
+                            <!-- Recommendations -->
+                            {% if analysis.analysis.maintenance_recommendations %}
+                                <div class="border-t pt-4">
+                                    <button onclick="toggleSection('recommendations-{{ forloop.counter }}')"
+                                            class="flex items-center justify-between w-full text-left">
+                                        <span class="font-medium text-gray-700">
+                                            <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                                            Maintenance Recommendations ({{ analysis.analysis.maintenance_recommendations|length }})
+                                        </span>
+                                        <i class="fas fa-chevron-down transform transition-transform duration-200"
+                                           id="icon-recommendations-{{ forloop.counter }}"></i>
+                                    </button>
+                                    <div id="recommendations-{{ forloop.counter }}" class="hidden mt-3">
+                                        <ul class="space-y-2">
+                                            {% for recommendation in analysis.analysis.maintenance_recommendations %}
+                                                <li class="flex items-start space-x-2">
+                                                    <i class="fas fa-check-circle text-green-500 mt-1 text-xs"></i>
+                                                    <span class="text-sm text-gray-700">{{ recommendation }}</span>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- Anomalies -->
+                            {% if analysis.analysis.anomalies %}
+                                <div class="border-t pt-4">
+                                    <button onclick="toggleSection('anomalies-{{ forloop.counter }}')"
+                                            class="flex items-center justify-between w-full text-left">
+                                        <span class="font-medium text-gray-700">
+                                            <i class="fas fa-exclamation-triangle mr-2 text-red-500"></i>
+                                            Detected Anomalies ({{ analysis.analysis.anomalies|length }})
+                                        </span>
+                                        <i class="fas fa-chevron-down transform transition-transform duration-200"
+                                           id="icon-anomalies-{{ forloop.counter }}"></i>
+                                    </button>
+                                    <div id="anomalies-{{ forloop.counter }}" class="hidden mt-3">
+                                        <div class="space-y-2">
+                                            {% for anomaly in analysis.analysis.anomalies|slice:":5" %}
+                                                <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                                    <div>
+                                                        <span class="text-sm font-medium text-gray-800">{{ anomaly.description }}</span>
+                                                        <div class="text-xs text-gray-600">{{ anomaly.metric }} • Value: {{ anomaly.value|floatformat:2 }}</div>
+                                                    </div>
+                                                    <span class="inline-flex px-2 py-1 text-xs rounded-full
+                                                        {% if anomaly.severity == 'critical' %}bg-red-100 text-red-800
+                                                        {% elif anomaly.severity == 'high' %}bg-orange-100 text-orange-800
+                                                        {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                                        {{ anomaly.severity|title }}
+                                                    </span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- Health Metrics -->
+                            {% if analysis.analysis.health_metrics %}
+                                <div class="border-t pt-4">
+                                    <button onclick="toggleSection('metrics-{{ forloop.counter }}')"
+                                            class="flex items-center justify-between w-full text-left">
+                                        <span class="font-medium text-gray-700">
+                                            <i class="fas fa-chart-bar mr-2 text-blue-500"></i>
+                                            Health Metrics
+                                        </span>
+                                        <i class="fas fa-chevron-down transform transition-transform duration-200"
+                                           id="icon-metrics-{{ forloop.counter }}"></i>
+                                    </button>
+                                    <div id="metrics-{{ forloop.counter }}" class="hidden mt-3">
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            {% if analysis.analysis.health_metrics.cpu %}
+                                                <div class="bg-gray-50 p-3 rounded">
+                                                    <div class="text-sm font-medium text-gray-600">CPU Usage</div>
+                                                    <div class="text-lg font-bold text-gray-800">{{ analysis.analysis.health_metrics.cpu.avg|floatformat:1 }}%</div>
+                                                    <div class="text-xs text-gray-500">Avg (Max: {{ analysis.analysis.health_metrics.cpu.max|floatformat:1 }}%)</div>
+                                                </div>
+                                            {% endif %}
+                                            {% if analysis.analysis.health_metrics.memory %}
+                                                <div class="bg-gray-50 p-3 rounded">
+                                                    <div class="text-sm font-medium text-gray-600">Memory Usage</div>
+                                                    <div class="text-lg font-bold text-gray-800">{{ analysis.analysis.health_metrics.memory.avg|floatformat:1 }}%</div>
+                                                    <div class="text-xs text-gray-500">Avg (Max: {{ analysis.analysis.health_metrics.memory.max|floatformat:1 }}%)</div>
+                                                </div>
+                                            {% endif %}
+                                            {% if analysis.analysis.health_metrics.disk %}
+                                                <div class="bg-gray-50 p-3 rounded">
+                                                    <div class="text-sm font-medium text-gray-600">Disk Usage</div>
+                                                    <div class="text-lg font-bold text-gray-800">{{ analysis.analysis.health_metrics.disk.avg|floatformat:1 }}%</div>
+                                                    <div class="text-xs text-gray-500">Average</div>
+                                                </div>
+                                            {% endif %}
+                                            {% if analysis.analysis.health_metrics.temperature %}
+                                                <div class="bg-gray-50 p-3 rounded">
+                                                    <div class="text-sm font-medium text-gray-600">Temperature</div>
+                                                    <div class="text-lg font-bold text-gray-800">{{ analysis.analysis.health_metrics.temperature.avg|floatformat:1 }}°C</div>
+                                                    <div class="text-xs text-gray-500">Avg (Max: {{ analysis.analysis.health_metrics.temperature.max|floatformat:1 }}°C)</div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="bg-white rounded-lg shadow p-12 text-center">
+                <i class="fas fa-robot text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">No Equipment Found</h3>
+                <p class="text-gray-600 mb-4">
+                    {% if search_query or risk_filter != 'all' %}
+                        No equipment matches your current filters.
+                    {% else %}
+                        No monitored equipment available for analysis.
+                    {% endif %}
+                </p>
+                {% if not search_query and risk_filter == 'all' %}
+                    <a href="{% url 'assets:equipment_list' %}" class="text-purple-600 hover:text-purple-800">
+                        Enable monitoring on equipment →
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if equipment_page.has_other_pages %}
+        <div class="bg-white rounded-lg shadow p-4">
+            <nav class="flex items-center justify-between">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    {% if equipment_page.has_previous %}
+                        <a href="?page={{ equipment_page.previous_page_number }}&search={{ search_query }}&risk={{ risk_filter }}"
+                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Previous
+                        </a>
+                    {% endif %}
+                    {% if equipment_page.has_next %}
+                        <a href="?page={{ equipment_page.next_page_number }}&search={{ search_query }}&risk={{ risk_filter }}"
+                           class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Next
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Page {{ equipment_page.number }} of {{ equipment_page.paginator.num_pages }}
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                            {% if equipment_page.has_previous %}
+                                <a href="?page={{ equipment_page.previous_page_number }}&search={{ search_query }}&risk={{ risk_filter }}"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            {% endif %}
+                            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                {{ equipment_page.number }}
+                            </span>
+                            {% if equipment_page.has_next %}
+                                <a href="?page={{ equipment_page.next_page_number }}&search={{ search_query }}&risk={{ risk_filter }}"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const icon = document.getElementById('icon-' + sectionId);
+
+    if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+    } else {
+        section.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+    }
+}
+
+function runBulkHealthAnalysis() {
+    // Show processing modal
+    showAIModal('Running Bulk Health Analysis...', 'Analyzing health metrics for all monitored equipment...');
+
+    fetch('/assets/api/ai/health-analysis/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            handleAIComplete({
+                type: 'bulk_health_analysis',
+                message: `Analysis complete! Processed ${data.analyzed_count} equipment items.`,
+                redirect: window.location.href
+            });
+        } else {
+            alert('Error: ' + data.error);
+            closeAIModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Analysis failed: ' + error);
+        closeAIModal();
+    });
+}
+
+function refreshAnalysis() {
+    window.location.reload();
+}
+
+function viewDetailedAnalysis(equipmentId) {
+    window.location.href = `/assets/ai/equipment/${equipmentId}/analysis/`;
+}
+
+// Helper functions from base.html are available globally
+</script>
+{% endblock %}

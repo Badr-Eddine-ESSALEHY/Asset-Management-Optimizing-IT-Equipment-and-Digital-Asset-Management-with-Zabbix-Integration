@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ equipment.name }} - Monitoring Details</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        .metric-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .trigger-item {
+            border-left: 4px solid #dee2e6;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: #f8f9fa;
+        }
+        .trigger-problem {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        .trigger-ok {
+            border-left-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'assets:monitoring_dashboard' %}">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                {% if can_manage %}
+                <a class="nav-link" href="{% url 'sync_equipment_to_monitoring' equipment.id %}"
+                   onclick="return confirm('Sync this equipment with Zabbix?')">
+                    <i class="fas fa-sync"></i> Sync Now
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Equipment Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h2>
+                                    <i class="fas fa-desktop me-2"></i>{{ equipment.name }}
+                                    {% if equipment.asset_tag %}
+                                    <small class="text-muted">({{ equipment.asset_tag }})</small>
+                                    {% endif %}
+                                </h2>
+                                <p class="text-muted mb-2">
+                                    {{ equipment.manufacturer }} {{ equipment.model }}
+                                </p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <strong>IP Address:</strong>
+                                        <code>{{ equipment.ip_address|default:"N/A" }}</code>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong>Location:</strong>
+                                        {{ equipment.location.name|default:"N/A" }}
+                                    </div>
+                                    <div class="col-sm-6 mt-2">
+                                        <strong>Assigned To:</strong>
+                                        {{ equipment.assigned_to.get_full_name|default:"Unassigned" }}
+                                    </div>
+                                    <div class="col-sm-6 mt-2">
+                                        <strong>Hostname:</strong>
+                                        {{ equipment.hostname|default:"N/A" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="mb-2">
+                                    {% if equipment.monitoring_enabled %}
+                                        {% if equipment.zabbix_hostid %}
+                                        <span class="badge bg-success status-badge">
+                                            <i class="fas fa-eye"></i> Monitored
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-warning status-badge">
+                                            <i class="fas fa-clock"></i> Setup Pending
+                                        </span>
+                                        {% endif %}
+                                    {% else %}
+                                    <span class="badge bg-secondary status-badge">
+                                        <i class="fas fa-eye-slash"></i> Monitoring Disabled
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <span class="badge bg-info status-badge">
+                                        {{ equipment.status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SNMP Test Results -->
+        {% if snmp_test_result %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-network-wired me-2"></i>SNMP Connectivity Test</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if snmp_test_result.success %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> SNMP connection successful!
+                            <ul class="mb-0 mt-2">
+                                {% for key, value in snmp_test_result.data.items %}
+                                <li><strong>{{ key|title }}:</strong> {{ value }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-times-circle"></i> SNMP connection failed: {{ snmp_test_result.error }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Monitoring Data -->
+        {% if monitoring_data and monitoring_data.success %}
+        <div class="row">
+            <!-- Current Metrics -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <h5><i class="fas fa-chart-line me-2"></i>Real-time Metrics</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="refreshMetrics()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <a href="?test_snmp=1" class="btn btn-sm btn-outline-info">
+                                <i class="fas fa-network-wired"></i> Test SNMP
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for item in monitoring_data.items|slice:":12" %}
+                            <div class="col-md-4 mb-3">
+                                <div class="metric-card p-3">
+                                    <h6 class="text-muted mb-1">{{ item.name|truncatechars:30 }}</h6>
+                                    <div class="d-flex justify-content-between align-items-end">
+                                        <span class="h5 mb-0">{{ item.lastvalue|default:"N/A" }}</span>
+                                        <small class="text-muted">{{ item.units }}</small>
+                                    </div>
+                                    <small class="text-muted">
+                                        Last: {{ item.lastclock|date:"Y-m-d H:i:s"|default:"Never" }}
+                                    </small>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No metrics data available</h5>
+                                    <p class="text-muted">Monitoring data may still be collecting.</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                {% if monitoring_data.history %}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-area me-2"></i>Historical Charts</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for item_name, history in monitoring_data.history.items|slice:":4" %}
+                            <div class="col-md-6 mb-4">
+                                <h6>{{ item_name|truncatechars:40 }}</h6>
+                                <div class="chart-container">
+                                    <canvas id="chart-{{ forloop.counter }}"></canvas>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Triggers and Alerts -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-bell me-2"></i>Triggers & Alerts</h5>
+                    </div>
+                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                        {% for trigger in monitoring_data.triggers %}
+                        <div class="trigger-item {% if trigger.value == '1' %}trigger-problem{% else %}trigger-ok{% endif %}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ trigger.description|truncatechars:50 }}</h6>
+                                    <small class="text-muted">
+                                        Priority: {{ trigger.priority }}
+                                    </small>
+                                </div>
+                                <span class="badge {% if trigger.value == '1' %}bg-danger{% else %}bg-success{% endif %}">
+                                    {% if trigger.value == '1' %}Problem{% else %}OK{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                            <h6 class="text-muted">No triggers configured</h6>
+                            <p class="text-muted">No monitoring triggers found for this equipment.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Equipment Details -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-info-circle me-2"></i>Equipment Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Serial Number:</strong></td>
+                                <td>{{ equipment.serial_number|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MAC Address:</strong></td>
+                                <td>{{ equipment.mac_address|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Category:</strong></td>
+                                <td>{{ equipment.category|title }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Purchase Date:</strong></td>
+                                <td>{{ equipment.purchase_date|date:"Y-m-d"|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Warranty:</strong></td>
+                                <td>{{ equipment.warranty_expiration|date:"Y-m-d"|default:"N/A" }}</td>
+                            </tr>
+                            {% if equipment.zabbix_hostid %}
+                            <tr>
+                                <td><strong>Zabbix Host ID:</strong></td>
+                                <td><code>{{ equipment.zabbix_hostid }}</code></td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- No Monitoring Data -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-exclamation-triangle fa-4x text-warning mb-4"></i>
+                        <h3 class="text-muted">No Monitoring Data Available</h3>
+
+                        {% if not equipment.monitoring_enabled %}
+                        <p class="text-muted">Monitoring is disabled for this equipment.</p>
+                        <a href="/admin/assets/equipment/{{ equipment.id }}/change/" class="btn btn-primary">
+                            <i class="fas fa-cog"></i> Enable Monitoring
+                        </a>
+                        {% elif not equipment.ip_address %}
+                        <p class="text-muted">No IP address configured for this equipment.</p>
+                        <a href="/admin/assets/equipment/{{ equipment.id }}/change/" class="btn btn-primary">
+                            <i class="fas fa-network-wired"></i> Configure IP Address
+                        </a>
+                        {% elif not equipment.zabbix_hostid %}
+                        <p class="text-muted">Equipment not yet synced to Zabbix monitoring system.</p>
+                        <a href="{% url 'sync_equipment_to_monitoring' equipment.id %}" class="btn btn-success">
+                            <i class="fas fa-cloud-upload-alt"></i> Setup Monitoring
+                        </a>
+                        <a href="?test_snmp=1" class="btn btn-info ms-2">
+                            <i class="fas fa-network-wired"></i> Test SNMP Connection
+                        </a>
+                        {% else %}
+                        <p class="text-muted">Monitoring data is not yet available. This may take a few minutes.</p>
+                        <button class="btn btn-primary" onclick="refreshMetrics()">
+                            <i class="fas fa-sync-alt"></i> Refresh Data
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize charts
+        {% if monitoring_data.history %}
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for item_name, history in monitoring_data.history.items|slice:":4" %}
+            const ctx{{ forloop.counter }} = document.getElementById('chart-{{ forloop.counter }}').getContext('2d');
+            new Chart(ctx{{ forloop.counter }}, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: '{{ item_name|truncatechars:30 }}',
+                        data: [
+                            {% for point in history|slice:":50" %}
+                            {
+                                x: new Date({{ point.clock }} * 1000),
+                                y: {{ point.value|default:0 }}
+                            },
+                            {% endfor %}
+                        ],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour',
+                                displayFormats: {
+                                    hour: 'HH:mm'
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: false
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            {% endfor %}
+        });
+        {% endif %}
+
+        function refreshMetrics() {
+            const equipmentId = {{ equipment.id }};
+
+            // Show loading state
+            const refreshBtn = document.querySelector('[onclick="refreshMetrics()"]');
+            if (refreshBtn) {
+                const originalText = refreshBtn.innerHTML;
+                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                refreshBtn.disabled = true;
+
+                // Fetch fresh data
+                fetch(`/api/monitoring/${equipmentId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reload page to show fresh data
+                        window.location.reload();
+                    } else {
+                        alert('Failed to refresh monitoring data: ' + (data.error || 'Unknown error'));
+                        refreshBtn.innerHTML = originalText;
+                        refreshBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Network error occurred while refreshing data.');
+                    refreshBtn.innerHTML = originalText;
+                    refreshBtn.disabled = false;
+                });
+            }
+        }
+
+        // Auto-refresh every 2 minutes
+        setInterval(() => {
+            refreshMetrics();
+        }, 120000);
+    </script>
+</body>
+</html>

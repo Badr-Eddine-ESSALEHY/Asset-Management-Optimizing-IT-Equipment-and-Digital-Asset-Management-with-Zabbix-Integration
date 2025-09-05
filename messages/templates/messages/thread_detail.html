@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ thread.title|default:"Conversation" }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="{% url 'messages:dashboard' %}"
+                       class="text-gray-600 hover:text-gray-900 mr-4">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            {% if thread.thread_type == 'direct' %}
+                                <i class="fas fa-user-circle text-blue-500 mr-2"></i>
+                            {% elif thread.thread_type == 'group' %}
+                                <i class="fas fa-users text-green-500 mr-2"></i>
+                            {% elif thread.thread_type == 'intervention' %}
+                                <i class="fas fa-tools text-orange-500 mr-2"></i>
+                            {% else %}
+                                <i class="fas fa-comments text-gray-500 mr-2"></i>
+                            {% endif %}
+                            {{ thread.title|default:"Untitled Conversation" }}
+                        </h1>
+                        <div class="flex items-center text-sm text-gray-500 mt-1">
+                            <span class="capitalize">{{ thread.get_thread_type_display }}</span>
+                            <span class="mx-2">•</span>
+                            <span>{{ participants|length }} participant{{ participants|length|pluralize }}</span>
+                            <span class="mx-2">•</span>
+                            <span>Created {{ thread.created_at|timesince }} ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Participants Info -->
+                <div class="flex items-center space-x-2">
+                    {% for participant in participants %}
+                        {% if forloop.counter <= 3 %}
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-medium text-gray-700">
+                                {{ participant.first_name|first|default:participant.username|first|upper }}
+                            </div>
+                            <span class="ml-2 text-sm text-gray-700 hidden sm:inline">{{ participant.username }}</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% if participants|length > 3 %}
+                        <span class="text-sm text-gray-500">+{{ participants|length|add:"-3" }} more</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-lg shadow flex flex-col" style="height: calc(100vh - 200px);">
+
+            <!-- Messages Area -->
+            <div id="messages-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+                {% for message in messages %}
+                <div class="flex {% if message.sender == user %}justify-end{% else %}justify-start{% endif %}">
+                    <div class="flex max-w-xs lg:max-w-md {% if message.sender == user %}flex-row-reverse{% endif %}">
+                        <!-- Avatar -->
+                        <div class="flex-shrink-0 {% if message.sender == user %}ml-3{% else %}mr-3{% endif %}">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">
+                                {% if message.sender %}
+                                    {{ message.sender.first_name|first|default:message.sender.username|first|upper }}
+                                {% else %}
+                                    <i class="fas fa-robot text-blue-500"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Message Content -->
+                        <div class="{% if message.sender == user %}bg-green-500 text-white{% else %}bg-gray-200 text-gray-900{% endif %} rounded-lg px-4 py-2">
+                            <!-- Message Header -->
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-medium {% if message.sender == user %}text-green-100{% else %}text-gray-600{% endif %}">
+                                    {% if message.sender %}
+                                        {{ message.sender.username }}
+                                    {% else %}
+                                        System
+                                    {% endif %}
+                                </span>
+                                {% if message.priority != 'normal' %}
+                                <span class="text-xs px-1 py-0.5 rounded
+                                    {% if message.priority == 'high' %}bg-orange-100 text-orange-800
+                                    {% elif message.priority == 'critical' %}bg-red-100 text-red-800
+                                    {% else %}bg-blue-100 text-blue-800
+                                    {% endif %}">
+                                    {{ message.get_priority_display }}
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Message Text -->
+                            <div class="text-sm">
+                                {{ message.content|linebreaks }}
+                            </div>
+
+                            <!-- Attachment -->
+                            {% if message.attachment %}
+                            <div class="mt-2 pt-2 border-t {% if message.sender == user %}border-green-400{% else %}border-gray-300{% endif %}">
+                                <a href="{{ message.attachment.url }}"
+                                   class="flex items-center text-xs {% if message.sender == user %}text-green-100 hover:text-white{% else %}text-gray-600 hover:text-gray-800{% endif %}">
+                                    <i class="fas fa-paperclip mr-1"></i>
+                                    {{ message.attachment.name|default:"Attachment" }}
+                                </a>
+                            </div>
+                            {% endif %}
+
+                            <!-- Message Footer -->
+                            <div class="flex items-center justify-between mt-2 text-xs {% if message.sender == user %}text-green-100{% else %}text-gray-500{% endif %}">
+                                <span>{{ message.created_at|date:"H:i" }}</span>
+                                {% if message.message_type != 'text' %}
+                                <span class="capitalize">{{ message.get_message_type_display }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-8">
+                    <i class="fas fa-comments text-gray-300 text-4xl mb-4"></i>
+                    <p class="text-gray-500 mb-4">No messages yet. Start the conversation!</p>
+                </div>
+                {% endfor %}
+
+                <!-- Typing Indicator -->
+                <div id="typing-indicator" class="hidden flex justify-start">
+                    <div class="flex max-w-xs lg:max-w-md">
+                        <div class="flex-shrink-0 mr-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 animate-pulse"></div>
+                        </div>
+                        <div class="bg-gray-200 rounded-lg px-4 py-2">
+                            <div class="flex space-x-1">
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Input -->
+            <div class="border-t border-gray-200 p-4">
+                <form id="message-form" method="post" enctype="multipart/form-data" class="flex items-end space-x-4">
+                    {% csrf_token %}
+                    <div class="flex-1">
+                        <!-- Message Type & Priority -->
+                        <div class="flex space-x-2 mb-2">
+                            {{ form.message_type }}
+                            {{ form.priority }}
+                        </div>
+
+                        <!-- Message Content -->
+                        <div class="relative">
+                            {{ form.content }}
+                        </div>
+
+                        <!-- File Attachment -->
+                        <div class="mt-2">
+                            {{ form.attachment }}
+                        </div>
+                    </div>
+
+                    <!-- Send Button -->
+                    <button type="submit"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i>Send
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WebSocket & Real-time Features -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const messagesContainer = document.getElementById('messages-container');
+    const messageForm = document.getElementById('message-form');
+    const messageInput = document.querySelector('textarea[name="content"]');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const threadId = '{{ thread.id }}';
+
+    let typingTimer;
+    let isTyping = false;
+    let socket = null;
+
+    // Auto-scroll to bottom
+    function scrollToBottom() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Initial scroll to bottom
+    scrollToBottom();
+
+    // WebSocket connection
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/messages/`;
+
+    function connectWebSocket() {
+        socket = new WebSocket(wsUrl);
+
+        socket.onopen = function(e) {
+            console.log('Connected to messaging WebSocket');
+            // Join this thread
+            socket.send(JSON.stringify({
+                'action': 'join_thread',
+                'thread_id': threadId
+            }));
+        };
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            handleWebSocketMessage(data);
+        };
+
+        socket.onclose = function(e) {
+            console.log('WebSocket disconnected, attempting to reconnect...');
+            setTimeout(connectWebSocket, 3000);
+        };
+
+        socket.onerror = function(e) {
+            console.error('WebSocket error:', e);
+        };
+    }
+
+    function handleWebSocketMessage(data) {
+        switch(data.type) {
+            case 'new_message':
+                if (data.message.thread_id === threadId) {
+                    addMessageToChat(data.message);
+                }
+                break;
+            case 'typing_indicator':
+                if (data.username !== '{{ user.username }}') {
+                    showTypingIndicator(data.username, data.is_typing);
+                }
+                break;
+        }
+    }
+
+    function addMessageToChat(message) {
+        const isCurrentUser = message.sender.id === {{ user.id }};
+        const messageHtml = `
+            <div class="flex ${isCurrentUser ? 'justify-end' : 'justify-start'}">
+                <div class="flex max-w-xs lg:max-w-md ${isCurrentUser ? 'flex-row-reverse' : ''}">
+                    <div class="flex-shrink-0 ${isCurrentUser ? 'ml-3' : 'mr-3'}">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">
+                            ${message.sender.username.charAt(0).toUpperCase()}
+                        </div>
+                    </div>
+                    <div class="${isCurrentUser ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-900'} rounded-lg px-4 py-2">
+                        <div class="text-xs font-medium ${isCurrentUser ? 'text-green-100' : 'text-gray-600'} mb-1">
+                            ${message.sender.username}
+                        </div>
+                        <div class="text-sm">${message.content}</div>
+                        <div class="text-xs ${isCurrentUser ? 'text-green-100' : 'text-gray-500'} mt-2">
+                            ${new Date(message.created_at).toLocaleTimeString()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+        scrollToBottom();
+    }
+
+    function showTypingIndicator(username, isTyping) {
+        if (isTyping) {
+            typingIndicator.classList.remove('hidden');
+        } else {
+            typingIndicator.classList.add('hidden');
+        }
+        scrollToBottom();
+    }
+
+    // Typing indicators
+    messageInput.addEventListener('input', function() {
+        if (!isTyping) {
+            isTyping = true;
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    'action': 'typing',
+                    'thread_id': threadId,
+                    'is_typing': true
+                }));
+            }
+        }
+
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function() {
+            isTyping = false;
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    'action': 'typing',
+                    'thread_id': threadId,
+                    'is_typing': false
+                }));
+            }
+        }, 1000);
+    });
+
+    // Handle form submission via WebSocket
+    messageForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const content = messageInput.value.trim();
+        if (!content) return;
+
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({
+                'action': 'send_message',
+                'thread_id': threadId,
+                'content': content,
+                'message_type': document.querySelector('select[name="message_type"]').value,
+                'priority': document.querySelector('select[name="priority"]').value
+            }));
+
+            // Clear input field
+            messageInput.value = '';
+        } else {
+            // Fallback to traditional form submission if WebSocket fails
+            messageForm.submit();
+        }
+    });
+
+    // Initialize WebSocket connection
+    connectWebSocket();
+});
+</script>
+{% endblock %}

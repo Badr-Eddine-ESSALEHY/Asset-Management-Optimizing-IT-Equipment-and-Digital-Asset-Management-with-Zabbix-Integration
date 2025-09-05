@@ -1,0 +1,148 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Settings - Asset Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'assets:monitoring_dashboard' %}">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-cog me-2"></i>Monitoring Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Connection Status -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5>Zabbix Connection Status</h5>
+                                {% if connection_status %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle"></i> Connected to Zabbix API
+                                </div>
+                                {% else %}
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-times-circle"></i> Unable to connect to Zabbix API
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Monitoring Statistics</h5>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>Monitored Equipment:</td>
+                                        <td><strong>{{ monitored_count }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Zabbix Server:</td>
+                                        <td>{{ zabbix_config.SERVER|urlize }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <button type="submit" name="action" value="test_connection" class="btn btn-outline-primary w-100">
+                                        <i class="fas fa-plug"></i> Test Zabbix Connection
+                                    </button>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <button type="submit" name="action" value="refresh_monitoring" class="btn btn-outline-info w-100">
+                                        <i class="fas fa-sync-alt"></i> Refresh Monitoring Data
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Configuration Display -->
+                        <hr>
+                        <h5>Current Configuration</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <td><strong>Zabbix Server URL:</strong></td>
+                                    <td><code>{{ zabbix_config.SERVER }}</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SNMP Community:</strong></td>
+                                    <td><code>{{ zabbix_config.SNMP_COMMUNITY }}</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SNMP Version:</strong></td>
+                                    <td><code>{{ zabbix_config.SNMP_VERSION }}</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Default Templates:</strong></td>
+                                    <td>
+                                        {% for template in zabbix_config.DEFAULT_TEMPLATES %}
+                                        <span class="badge bg-secondary me-1">{{ template }}</span>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Help & Documentation -->
+                        <hr>
+                        <h5>Quick Help</h5>
+                        <div class="accordion" id="helpAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#troubleshooting">
+                                        <i class="fas fa-wrench me-2"></i>Troubleshooting
+                                    </button>
+                                </h2>
+                                <div id="troubleshooting" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li><strong>Connection Failed:</strong> Check Zabbix server is running and API is accessible</li>
+                                            <li><strong>SNMP Test Failed:</strong> Verify IP address and SNMP is enabled on target device</li>
+                                            <li><strong>No Monitoring Data:</strong> Wait a few minutes for data collection to start</li>
+                                            <li><strong>Permission Errors:</strong> Ensure Zabbix user has proper permissions</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#setup-guide">
+                                        <i class="fas fa-book me-2"></i>Setup Guide
+                                    </button>
+                                </h2>
+                                <div id="setup-guide" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <ol>
+                                            <li>Ensure equipment has valid IP address configured</li>
+                                            <li>Enable SNMP on the target equipment</li>
+                                            <li>Enable monitoring checkbox in equipment settings</li>
+                                            <li>Use "Setup Monitoring" button to sync with Zabbix</li>
+                                            <li>Wait for data collection to begin (2-5 minutes)</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

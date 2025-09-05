@@ -7,20 +7,10 @@ from django.contrib import messages
 from .forms import EquipmentForm, SoftwareForm, LicenseForm, InterventionForm
 from .models import Equipment, Software, License, Intervention
 from .signals import send_intervention_status_update  # Import the status update function
-from members.models import CustomUser
 import logging
 
 logger = logging.getLogger(__name__)
 
-# class IsAdminMixin(UserPassesTestMixin):
-#     """Mixin to check if the user is an admin."""
-#     def test_func(self):
-#         return self.request.user.is_authenticated and self.request.user.role == 'admin'
-#
-# class IsTechnicianOrAdminMixin(UserPassesTestMixin):
-#     """Mixin to check if the user is a technician or an admin."""
-#     def test_func(self):
-#         return self.request.user.is_authenticated and self.request.user.role in ['technician', 'admin']
 
 
 class IsAdminMixin(UserPassesTestMixin):
@@ -316,3 +306,6 @@ class InterventionDeleteView(LoginRequiredMixin, IsAdminMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Intervention deleted successfully.')
         return super().delete(request, *args, **kwargs)
+
+
+

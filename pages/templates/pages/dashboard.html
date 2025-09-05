@@ -1,5 +1,5 @@
 {% load static %}
-
+{#fix it to extend the same side menu bar#}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,17 +87,79 @@
 </head>
 <body>
 
-<div class="sidebar d-flex flex-column">
-    <div class="mb-4 px-3">
+<div class="sidebar w-64 min-h-screen fixed text-white flex flex-col bg-gradient-to-b from-green-600 to-green-800">
+    <div class="p-4 mb-4">
         <img src="{% static 'admin/img/logo.png' %}" alt="OCP Logo" style="width: 120px; height: auto;">
-        <h5 class="mt-2"> Asset Management</h5>
+        <h5 class="mt-2 text-xl font-semibold">Asset Management</h5>
     </div>
-    <a href="{% url 'pages:dashboard' %}" class="active"><i class="fa-solid fa-house me-2"></i>Dashboard</a>
-    <a href="{% url 'assets:equipment_list' %}"><i class="fa-solid fa-desktop me-2"></i>Equipment Management</a>
-    <a href="{% url 'assets:license_list' %}"><i class="fa-solid fa-key me-2"></i>Licenses Management</a>
-    <a href="{% url 'assets:software_list' %}"><i class="fa-solid fa-code me-2"></i>Software Management</a>
-    <a href="{% url 'assets:intervention_list' %}"><i class="fa-solid fa-tools me-2"></i>Interventions</a>
-    <a href="/zabbix/"><i class="fa-solid fa-chart-line me-2"></i>Zabbix Monitoring</a>
+
+    <div class="flex-1">
+        <!-- Dashboard -->
+        <a href="{% url 'pages:dashboard' %}"
+           class="{% if request.resolver_match.view_name == 'pages:dashboard' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+        </a>
+
+        <!-- AI Section -->
+        <div class="px-4 py-2 text-xs uppercase tracking-wider text-green-200 font-semibold">
+            AI Assistant
+        </div>
+        <a href="{% url 'assets:ai_dashboard' %}"
+           class="{% if request.resolver_match.view_name == 'assets:ai_dashboard' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-robot mr-3 ai-status"></i>AI Dashboard
+        </a>
+        <a href="{% url 'assets:predictive_maintenance' %}"
+           class="{% if request.resolver_match.view_name == 'assets:predictive_maintenance' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-chart-line mr-3"></i>Predictive Analysis
+        </a>
+        <a href="{% url 'assets:asset_categorization' %}"
+           class="{% if request.resolver_match.view_name == 'assets:asset_categorization' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-tags mr-3"></i>Auto Categorization
+        </a>
+        <a href="{% url 'assets:image_recognition' %}"
+           class="{% if request.resolver_match.view_name == 'assets:image_recognition' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-camera mr-3"></i>Image Recognition
+        </a>
+
+        <!-- Asset Management -->
+        <div class="px-4 py-2 text-xs uppercase tracking-wider text-green-200 font-semibold">
+            Asset Management
+        </div>
+        <a href="{% url 'assets:equipment_list' %}"
+           class="{% if request.resolver_match.view_name == 'assets:equipment_list' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-desktop mr-3"></i>Equipment
+        </a>
+        <a href="{% url 'assets:license_list' %}"
+           class="{% if request.resolver_match.view_name == 'assets:license_list' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-key mr-3"></i>Licenses
+        </a>
+        <a href="{% url 'assets:software_list' %}"
+           class="{% if request.resolver_match.view_name == 'assets:software_list' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-code mr-3"></i>Software
+        </a>
+        <a href="{% url 'assets:intervention_list' %}"
+           class="{% if request.resolver_match.view_name == 'assets:intervention_list' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-tools mr-3"></i>Interventions
+        </a>
+
+        <!-- Monitoring -->
+        <div class="px-4 py-2 text-xs uppercase tracking-wider text-green-200 font-semibold">
+            Monitoring
+        </div>
+        <a href="{% url 'assets:monitoring_dashboard' %}"
+           class="{% if request.resolver_match.view_name == 'assets:monitoring_dashboard' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-chart-line mr-3"></i>Zabbix Monitoring
+        </a>
+
+        <!-- Profile -->
+        <div class="px-4 py-2 text-xs uppercase tracking-wider text-green-200 font-semibold">
+            Account
+        </div>
+        <a href="{% url 'members:profile' %}"
+           class="{% if request.resolver_match.view_name == 'members:profile' %}active{% endif %} py-3 px-6 flex items-center">
+            <i class="fas fa-user-circle mr-3"></i>Profile
+        </a>
+    </div>
 </div>
 
 <div class="content">

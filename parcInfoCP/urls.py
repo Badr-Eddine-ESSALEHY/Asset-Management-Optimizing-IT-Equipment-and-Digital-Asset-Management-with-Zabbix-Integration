@@ -18,6 +18,7 @@ urlpatterns = [
     # Wrap the include calls with login_required
     path('members/', include('members.urls', namespace='members')),
     path('assets/', include('assets.urls', namespace='assets')),
+    path('messages/', include('messages.urls', namespace='messages')),
 ]
 
 if settings.DEBUG:

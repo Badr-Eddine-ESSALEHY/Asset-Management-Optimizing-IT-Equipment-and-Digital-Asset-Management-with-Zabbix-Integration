@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Messages Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        <i class="fas fa-comments text-green-600 mr-3"></i>Messages
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="connection-status" class="text-sm">
+                        <i class="fas fa-circle text-gray-400 mr-1"></i>Connecting...
+                    </span>
+                    <a href="{% url 'messages:create_thread' %}" 
+                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-plus mr-2"></i>New Conversation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Recent Conversations -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">
+                            <i class="fas fa-inbox mr-2 text-blue-600"></i>Recent Conversations
+                        </h2>
+                        {% if unread_total > 0 %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-2">
+                            {{ unread_total }} unread
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="divide-y divide-gray-200">
+                        {% for thread in threads %}
+                        <div class="px-6 py-4 hover:bg-gray-50 transition duration-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0">
+                                            {% if thread.thread_type == 'direct' %}
+                                                <i class="fas fa-user-circle text-blue-500 text-xl"></i>
+                                            {% elif thread.thread_type == 'group' %}
+                                                <i class="fas fa-users text-green-500 text-xl"></i>
+                                            {% elif thread.thread_type == 'intervention' %}
+                                                <i class="fas fa-tools text-orange-500 text-xl"></i>
+                                            {% else %}
+                                                <i class="fas fa-comments text-gray-500 text-xl"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="ml-4 flex-1">
+                                            <div class="flex items-center justify-between">
+                                                <h3 class="text-sm font-medium text-gray-900 truncate">
+                                                    <a href="{% url 'messages:thread_detail' thread.id %}" 
+                                                       class="hover:text-green-600">
+                                                        {{ thread.title|default:"Untitled Conversation" }}
+                                                    </a>
+                                                </h3>
+                                                {% if thread.unread_count > 0 %}
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                    {{ thread.unread_count }}
+                                                </span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                <span class="capitalize">{{ thread.get_thread_type_display }}</span>
+                                                <span class="mx-2">•</span>
+                                                <span>{{ thread.participants.count }} participant{{ thread.participants.count|pluralize }}</span>
+                                                {% if thread.last_message_time %}
+                                                <span class="mx-2">•</span>
+                                                <span>{{ thread.last_message_time|timesince }} ago</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0 ml-4">
+                                    <a href="{% url 'messages:thread_detail' thread.id %}" 
+                                       class="text-green-600 hover:text-green-800">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="px-6 py-8 text-center">
+                            <i class="fas fa-comments text-gray-300 text-4xl mb-4"></i>
+                            <p class="text-gray-500 mb-4">No conversations yet</p>
+                            <a href="{% url 'messages:create_thread' %}" 
+                               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                                <i class="fas fa-plus mr-2"></i>Start a conversation
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications & Quick Actions -->
+            <div class="space-y-6">
+                <!-- System Notifications -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">
+                            <i class="fas fa-bell mr-2 text-yellow-600"></i>Recent Notifications
+                        </h2>
+                    </div>
+                    <div class="divide-y divide-gray-200 max-h-80 overflow-y-auto">
+                        {% for notification in notifications %}
+                        <div class="px-6 py-3">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    {% if notification.notification_type == 'asset_alert' %}
+                                        <i class="fas fa-exclamation-triangle text-red-500"></i>
+                                    {% elif notification.notification_type == 'maintenance_due' %}
+                                        <i class="fas fa-wrench text-orange-500"></i>
+                                    {% elif notification.notification_type == 'license_expiring' %}
+                                        <i class="fas fa-key text-blue-500"></i>
+                                    {% else %}
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <h4 class="text-sm font-medium text-gray-900">{{ notification.title }}</h4>
+                                    <p class="text-sm text-gray-600 mt-1">{{ notification.message|truncatechars:100 }}</p>
+                                    <p class="text-xs text-gray-400 mt-1">{{ notification.created_at|timesince }} ago</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="px-6 py-4 text-center text-gray-500">
+                            <i class="fas fa-check-circle text-green-500 text-2xl mb-2"></i>
+                            <p class="text-sm">All caught up!</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="px-6 py-3 border-t border-gray-200 bg-gray-50">
+                        <a href="{% url 'messages:notifications' %}" 
+                           class="text-sm text-green-600 hover:text-green-800 font-medium">
+                            View all notifications <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">
+                            <i class="fas fa-bolt mr-2 text-purple-600"></i>Quick Actions
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <a href="{% url 'messages:create_thread' %}" 
+                           class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition duration-200">
+                            <i class="fas fa-plus-circle text-green-500 mr-3"></i>
+                            <span class="text-sm font-medium text-gray-900">New Conversation</span>
+                        </a>
+                        
+                        {% if user.role == 'admin' %}
+                        <a href="{% url 'messages:create_notification' %}" 
+                           class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition duration-200">
+                            <i class="fas fa-bullhorn text-blue-500 mr-3"></i>
+                            <span class="text-sm font-medium text-gray-900">Send Announcement</span>
+                        </a>
+                        {% endif %}
+                        
+                        <a href="{% url 'assets:intervention_add' %}" 
+                           class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition duration-200">
+                            <i class="fas fa-tools text-orange-500 mr-3"></i>
+                            <span class="text-sm font-medium text-gray-900">Request Intervention</span>
+                        </a>
+                        
+                        <a href="{% url 'assets:equipment_list' %}" 
+                           class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition duration-200">
+                            <i class="fas fa-desktop text-purple-500 mr-3"></i>
+                            <span class="text-sm font-medium text-gray-900">Browse Equipment</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- User Stats -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">Your Activity</h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Total Conversations</span>
+                            <span class="text-sm font-medium text-gray-900">{{ threads|length }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Unread Messages</span>
+                            <span class="text-sm font-medium text-red-600">{{ unread_total }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Role</span>
+                            <span class="text-sm font-medium text-gray-900 capitalize">{{ user.role }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WebSocket Connection Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // WebSocket connection
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/messages/`;
+    let socket = null;
+    
+    function connectWebSocket() {
+        socket = new WebSocket(wsUrl);
+        
+        socket.onopen = function(e) {
+            console.log('WebSocket connected');
+            const status = document.getElementById('connection-status');
+            if (status) {
+                status.innerHTML = '<i class="fas fa-circle text-green-500 mr-1"></i>Connected';
+            }
+        };
+        
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            handleWebSocketMessage(data);
+        };
+        
+        socket.onclose = function(e) {
+            console.log('WebSocket disconnected');
+            const status = document.getElementById('connection-status');
+            if (status) {
+                status.innerHTML = '<i class="fas fa-circle text-red-500 mr-1"></i>Disconnected';
+            }
+            // Reconnect after 3 seconds
+            setTimeout(connectWebSocket, 3000);
+        };
+        
+        socket.onerror = function(e) {
+            console.error('WebSocket error:', e);
+        };
+    }
+    
+    function handleWebSocketMessage(data) {
+        switch(data.type) {
+            case 'new_message':
+                showToast('New Message', `${data.message.sender.username}: ${data.message.content.substring(0, 50)}...`, 'info');
+                break;
+            case 'system_notification':
+                showToast('System Alert', data.notification.message, 'warning');
+                break;
+            case 'unread_count':
+                updateUnreadBadge(data.count);
+                break;
+        }
+    }
+    
+    function showToast(title, message, type) {
+        // Simple toast notification (you can enhance this)
+        console.log(`[${type.toUpperCase()}] ${title}: ${message}`);
+    }
+    
+    function updateUnreadBadge(count) {
+        // Update any unread count displays
+        console.log(`Unread messages: ${count}`);
+    }
+    
+    // Connect when page loads
+    connectWebSocket();
+});
+</script>
+{% endblock %}

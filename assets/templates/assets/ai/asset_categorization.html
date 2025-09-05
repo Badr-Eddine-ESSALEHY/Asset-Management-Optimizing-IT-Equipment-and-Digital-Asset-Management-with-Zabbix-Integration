@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Asset Categorization - OCP Asset Management{% endblock %}
+
+{% block page_title %}AI Asset Categorization{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">AI-Powered Asset Categorization</h2>
+                <p class="text-gray-600 mt-2">Automatically categorize equipment using machine learning and keyword analysis</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="runAutoCategorization()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                    <i class="fas fa-magic mr-2"></i>Auto-Categorize All
+                </button>
+                <a href="{% url 'assets:equipment_add' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                    <i class="fas fa-plus mr-2"></i>Add Equipment
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-full">
+                    <i class="fas fa-desktop text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-sm font-medium text-gray-500">Total Equipment</h3>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_equipment }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-full">
+                    <i class="fas fa-question-circle text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-sm font-medium text-gray-500">Uncategorized</h3>
+                    <p class="text-2xl font-bold text-gray-800">{{ uncategorized_equipment.count }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-full">
+                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-sm font-medium text-gray-500">Categorized</h3>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_equipment|add:'-'|add:uncategorized_equipment.count }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-full">
+                    <i class="fas fa-percentage text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-sm font-medium text-gray-500">Completion</h3>
+                    <p class="text-2xl font-bold text-gray-800">
+                        {% if total_equipment > 0 %}
+                            {% widthratio total_equipment|add:'-'|add:uncategorized_equipment.count total_equipment 100 %}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Breakdown -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Category Distribution</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            {% for category, data in category_stats.items %}
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <span class="text-white font-bold text-lg">{{ data.count }}</span>
+                    </div>
+                    <h4 class="text-sm font-medium text-gray-700">{{ data.display }}</h4>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Uncategorized Equipment -->
+    {% if uncategorized_equipment %}
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Uncategorized Equipment</h3>
+                        <p class="text-sm text-gray-600">{{ uncategorized_equipment.count }} items need categorization</p>
+                    </div>
+                    <button onclick="runAutoCategorization()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm">
+                        <i class="fas fa-magic mr-2"></i>Categorize All
+                    </button>
+                </div>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                {% for equipment in uncategorized_equipment %}
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-question-circle text-2xl text-orange-500"></i>
+                                    <div>
+                                        <h4 class="text-lg font-medium text-gray-800">{{ equipment.name }}</h4>
+                                        <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                            <span><i class="fas fa-tag mr-1"></i>{{ equipment.asset_tag }}</span>
+                                            {% if equipment.manufacturer %}
+                                                <span><i class="fas fa-industry mr-1"></i>{{ equipment.manufacturer }}</span>
+                                            {% endif %}
+                                            {% if equipment.model %}
+                                                <span><i class="fas fa-cube mr-1"></i>{{ equipment.model }}</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if equipment.specifications %}
+                                            <p class="text-sm text-gray-500 mt-1">{{ equipment.specifications|truncatechars:100 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-3">
+                                <div class="flex space-x-2">
+                                    <button onclick="categorizeSingle({{ equipment.id }})"
+                                            class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm">
+                                        <i class="fas fa-robot mr-1"></i>Auto-Categorize
+                                    </button>
+                                    <a href="{% url 'assets:equipment_edit' equipment.id %}"
+                                       class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm">
+                                        <i class="fas fa-edit mr-1"></i>Edit
+                                    </a>
+                                    <a href="{% url 'assets:equipment_detail' equipment.id %}"
+                                       class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-sm">
+                                        <i class="fas fa-eye mr-1"></i>View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-lg shadow p-12 text-center">
+            <i class="fas fa-check-circle text-6xl text-green-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">All Equipment Categorized!</h3>
+            <p class="text-gray-600 mb-4">Great job! All your equipment has been properly categorized.</p>
+            <a href="{% url 'assets:equipment_add' %}" class="text-purple-600 hover:text-purple-800">
+                Add more equipment →
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- Recently Categorized -->
+    {% if recently_categorized %}
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Recently Categorized</h3>
+                <p class="text-sm text-gray-600">Latest equipment that has been categorized</p>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                {% for equipment in recently_categorized %}
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-{% if equipment.category == 'desktop' %}desktop
+                                    {% elif equipment.category == 'laptop' %}laptop
+                                    {% elif equipment.category == 'server' %}server
+                                    {% elif equipment.category == 'network' %}network-wired
+                                    {% elif equipment.category == 'printer' %}print
+                                    {% elif equipment.category == 'monitor' %}tv
+                                    {% elif equipment.category == 'ups' %}battery-full
+                                    {% elif equipment.category == 'peripheral' %}mouse
+                                    {% else %}question-circle{% endif %} text-xl
+                                    {% if equipment.category == 'desktop' %}text-blue-500
+                                    {% elif equipment.category == 'laptop' %}text-purple-500
+                                    {% elif equipment.category == 'server' %}text-red-500
+                                    {% elif equipment.category == 'network' %}text-green-500
+                                    {% elif equipment.category == 'printer' %}text-yellow-500
+                                    {% elif equipment.category == 'monitor' %}text-indigo-500
+                                    {% elif equipment.category == 'ups' %}text-orange-500
+                                    {% elif equipment.category == 'peripheral' %}text-pink-500
+                                    {% else %}text-gray-500{% endif %}"></i>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">{{ equipment.name }}</h4>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                        <span>{{ equipment.asset_tag }}</span>
+                                        <span>•</span>
+                                        <span class="capitalize">{{ equipment.get_category_display }}</span>
+                                        <span>•</span>
+                                        <span>{{ equipment.updated_at|timesince }} ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                                    {% if equipment.category == 'desktop' %}bg-blue-100 text-blue-800
+                                    {% elif equipment.category == 'laptop' %}bg-purple-100 text-purple-800
+                                    {% elif equipment.category == 'server' %}bg-red-100 text-red-800
+                                    {% elif equipment.category == 'network' %}bg-green-100 text-green-800
+                                    {% elif equipment.category == 'printer' %}bg-yellow-100 text-yellow-800
+                                    {% elif equipment.category == 'monitor' %}bg-indigo-100 text-indigo-800
+                                    {% elif equipment.category == 'ups' %}bg-orange-100 text-orange-800
+                                    {% elif equipment.category == 'peripheral' %}bg-pink-100 text-pink-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ equipment.get_category_display }}
+                                </span>
+                                <a href="{% url 'assets:equipment_detail' equipment.id %}"
+                                   class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- AI Results Modal -->
+<div id="categorization-results-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold">Categorization Results</h3>
+            <button onclick="closeResultsModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="categorization-results-content">
+            <!-- Results will be populated here -->
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button onclick="window.location.reload()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                Refresh Page
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function runAutoCategorization() {
+    // Show processing modal
+    showAIModal('Auto-Categorizing Assets...', 'Using AI to categorize uncategorized equipment...');
+
+    fetch('/assets/api/auto-categorize/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeAIModal();
+            showCategorizationResults(data);
+        } else {
+            alert('Error: ' + data.error);
+            closeAIModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Categorization failed: ' + error);
+        closeAIModal();
+    });
+}
+
+function categorizeSingle(equipmentId) {
+    // Show processing modal
+    showAIModal('Categorizing Equipment...', 'Analyzing equipment details and determining best category...');
+
+    fetch('/assets/api/auto-categorize/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            'equipment_id': equipmentId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeAIModal();
+            showSingleCategorizationResult(data.result);
+        } else {
+            alert('Error: ' + data.error);
+            closeAIModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Categorization failed: ' + error);
+        closeAIModal();
+    });
+}
+
+function showCategorizationResults(data) {
+    const modal = document.getElementById('categorization-results-modal');
+    const content = document.getElementById('categorization-results-content');
+
+    let html = `
+        <div class="mb-4">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <div>
+                        <h4 class="font-medium text-green-800">Categorization Complete!</h4>
+                        <p class="text-sm text-green-700">
+                            Processed ${data.processed} items • Successfully categorized ${data.categorized} items
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-3">
+    `;
+
+    data.results.forEach(result => {
+        const confidence = Math.round((result.result.confidence || 0) * 100);
+        const confidenceClass = confidence > 70 ? 'text-green-600' : confidence > 40 ? 'text-yellow-600' : 'text-red-600';
+
+        html += `
+            <div class="border rounded-lg p-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h5 class="font-medium">${result.equipment_name}</h5>
+                        <p class="text-sm text-gray-600">${result.result.reasoning || 'Analysis completed'}</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-medium capitalize">${result.result.category || 'other'}</div>
+                        <div class="text-sm ${confidenceClass}">${confidence}% confidence</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += '</div>';
+    content.innerHTML = html;
+    modal.classList.remove('hidden');
+}
+
+function showSingleCategorizationResult(result) {
+    const confidence = Math.round((result.confidence || 0) * 100);
+    const message = `Category: ${result.category || 'other'} (${confidence}% confidence)\n\nReasoning: ${result.reasoning || 'Analysis completed'}`;
+
+    alert(message);
+    // Reload page to show updated results
+    setTimeout(() => window.location.reload(), 1000);
+}
+
+function closeResultsModal() {
+    document.getElementById('categorization-results-modal').classList.add('hidden');
+}
+
+// Helper functions from base.html are available globally
+</script>
+{% endblock %}

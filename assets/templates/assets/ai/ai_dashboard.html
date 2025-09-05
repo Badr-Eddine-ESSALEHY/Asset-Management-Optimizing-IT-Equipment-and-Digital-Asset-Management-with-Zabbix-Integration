@@ -1,0 +1,379 @@
+{#ai_dashboard#}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Dashboard - Asset Management{% endblock %}
+
+{% block page_title %}AI Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- AI Overview Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Equipment Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                        <i class="fas fa-desktop text-white text-sm"></i>
+                    </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Total Equipment</dt>
+                        <dd class="text-lg font-medium text-gray-900">{{ total_equipment }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitored Equipment Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                        <i class="fas fa-chart-line text-white text-sm"></i>
+                    </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Monitored</dt>
+                        <dd class="text-lg font-medium text-gray-900">
+                            {{ monitored_equipment }} 
+                            <span class="text-sm text-gray-500">({{ monitoring_percentage }}%)</span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Uncategorized Equipment Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                        <i class="fas fa-tags text-white text-sm"></i>
+                    </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Uncategorized</dt>
+                        <dd class="text-lg font-medium text-gray-900">{{ uncategorized_equipment }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Status Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                        <i class="fas fa-robot text-white text-sm animate-pulse"></i>
+                    </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">AI Status</dt>
+                        <dd class="text-lg font-medium text-green-600">Active</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick AI Actions -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-bolt mr-2 text-purple-600"></i>Quick AI Actions
+            </h2>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Health Analysis -->
+                <button onclick="runBulkHealthAnalysis()" 
+                        class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white p-4 rounded-lg transition duration-200 text-left">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-heartbeat text-2xl mr-3"></i>
+                        <span class="font-semibold">Health Analysis</span>
+                    </div>
+                    <p class="text-sm text-red-100">Analyze equipment health and predict maintenance needs</p>
+                </button>
+
+                <!-- Auto Categorization -->
+                <button onclick="runAutoCategorization()" 
+                        class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-4 rounded-lg transition duration-200 text-left">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-tags text-2xl mr-3"></i>
+                        <span class="font-semibold">Auto Categorize</span>
+                    </div>
+                    <p class="text-sm text-blue-100">Automatically categorize {{ uncategorized_equipment }} uncategorized items</p>
+                </button>
+
+                <!-- Image Recognition -->
+                <a href="{% url 'assets:image_recognition' %}" 
+                   class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-4 rounded-lg transition duration-200 text-left block">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-camera text-2xl mr-3"></i>
+                        <span class="font-semibold">Image Recognition</span>
+                    </div>
+                    <p class="text-sm text-green-100">Upload images to identify and categorize equipment</p>
+                </a>
+
+                <!-- System Reports -->
+                <button onclick="generateAIReport()" 
+                        class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white p-4 rounded-lg transition duration-200 text-left">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-file-alt text-2xl mr-3"></i>
+                        <span class="font-semibold">AI Reports</span>
+                    </div>
+                    <p class="text-sm text-purple-100">Generate comprehensive AI analysis reports</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- High Risk Equipment -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-exclamation-triangle mr-2 text-red-600"></i>High Risk Equipment
+                </h2>
+            </div>
+            <div class="p-6">
+                {% if high_risk_equipment %}
+                    <div class="space-y-4">
+                        {% for item in high_risk_equipment %}
+                        <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-medium text-gray-900">{{ item.equipment.name }}</h3>
+                                <span class="px-2 py-1 text-xs font-medium rounded-full 
+                                    {% if item.analysis.risk_level == 'critical' %}bg-red-100 text-red-800
+                                    {% elif item.analysis.risk_level == 'high' %}bg-orange-100 text-orange-800
+                                    {% endif %}">
+                                    {{ item.analysis.risk_level|title }}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">{{ item.equipment.asset_tag }}</p>
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm">
+                                    <span class="text-gray-500">Health Score:</span>
+                                    <span class="font-medium text-red-600">{{ item.analysis.health_score|floatformat:1 }}/100</span>
+                                </div>
+                                <a href="{% url 'assets:equipment_ai_analysis' item.equipment.id %}" 
+                                   class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                    View Details →
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <i class="fas fa-check-circle text-green-500 text-3xl mb-4"></i>
+                        <p class="text-gray-500">No high-risk equipment detected</p>
+                        <p class="text-sm text-gray-400 mt-2">All monitored equipment appears to be functioning normally</p>
+                    </div>
+                {% endif %}
+                
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <a href="{% url 'assets:predictive_maintenance' %}" 
+                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        View Full Predictive Analysis →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Distribution -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-chart-pie mr-2 text-blue-600"></i>Equipment Categories
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    {% for category, count in category_stats.items %}
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">{{ category }}</span>
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full h-2 mr-3">
+                                <div class="bg-blue-600 h-2 rounded-full" 
+                                     style="width: {{ count|div:total_equipment|mul:100 }}%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900 w-8 text-right">{{ count }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="mt-6 pt-4 border-t border-gray-200">
+                    <a href="{% url 'assets:asset_categorization' %}" 
+                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        Manage Categorization →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent AI Activities -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-history mr-2 text-green-600"></i>Recent AI Activities
+            </h2>
+        </div>
+        <div class="p-6">
+            {% if recent_analyses %}
+                <div class="space-y-4">
+                    {% for activity in recent_analyses %}
+                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="flex-shrink-0 mr-4">
+                            <i class="fas fa-robot text-purple-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-900">{{ activity.description }}</p>
+                            <p class="text-xs text-gray-500">{{ activity.timestamp|timesince }} ago</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded">
+                                {{ activity.status }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <i class="fas fa-robot text-gray-300 text-3xl mb-4"></i>
+                    <p class="text-gray-500">No recent AI activities</p>
+                    <p class="text-sm text-gray-400 mt-2">Start by running a health analysis or auto-categorization</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- AI Processing Modal (inherited from base template) -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadRecentActivities();
+    
+    // Auto-refresh every 5 minutes
+    setInterval(loadRecentActivities, 300000);
+});
+
+function runBulkHealthAnalysis() {
+    showAIModal('Running Health Analysis...', 'Analyzing all monitored equipment for health issues...');
+    
+    fetch('/assets/api/health-analysis/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateAIProgress(100, `Analysis complete! Processed ${data.analyzed_count} items.`);
+            setTimeout(() => {
+                closeAIModal();
+                location.reload(); // Refresh to show updated data
+            }, 2000);
+        } else {
+            throw new Error(data.error || 'Analysis failed');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        updateAIProgress(100, 'Error: ' + error.message);
+        setTimeout(closeAIModal, 3000);
+    });
+}
+
+function runAutoCategorization() {
+    const uncategorized = {{ uncategorized_equipment }};
+    if (uncategorized === 0) {
+        alert('No uncategorized equipment found!');
+        return;
+    }
+    
+    showAIModal('Auto-Categorizing Assets...', `Processing ${uncategorized} uncategorized items...`);
+    
+    fetch('/assets/api/auto-categorize/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateAIProgress(100, `Categorization complete! Updated ${data.categorized} items.`);
+            setTimeout(() => {
+                closeAIModal();
+                location.reload();
+            }, 2000);
+        } else {
+            throw new Error(data.error || 'Categorization failed');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        updateAIProgress(100, 'Error: ' + error.message);
+        setTimeout(closeAIModal, 3000);
+    });
+}
+
+function generateAIReport() {
+    showAIModal('Generating AI Report...', 'Compiling comprehensive analysis report...');
+    
+    // Simulate report generation
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            updateAIProgress(100, 'Report generated successfully!');
+            setTimeout(() => {
+                closeAIModal();
+                // You can redirect to a report page or download the report
+                alert('AI Report feature coming soon!');
+            }, 2000);
+        } else {
+            updateAIProgress(progress, `Generating report... ${Math.round(progress)}%`);
+        }
+    }, 500);
+}
+
+function loadRecentActivities() {
+    // This would load recent AI activities from your backend
+    // For now, it's just a placeholder
+    console.log('Loading recent AI activities...');
+}
+
+// Utility function from base template
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

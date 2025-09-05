@@ -129,6 +129,28 @@
             </div>
         </div>
     </div>
+
+    <!-- Added Communication Card -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5><i class="fas fa-comments"></i> Communication</h5>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'messages:equipment_message' object.id %}" class="btn btn-primary">
+                <i class="fas fa-comment"></i> Send Message About This Equipment
+            </a>
+
+            {% if user.role == 'admin' %}
+            <button onclick="runHealthAnalysis({{ object.id }})" class="btn btn-info ms-2">
+                <i class="fas fa-chart-line"></i> AI Health Analysis
+            </button>
+            <button onclick="categorizeAsset({{ object.id }})" class="btn btn-secondary ms-2">
+                <i class="fas fa-robot"></i> AI Categorization
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -158,5 +180,21 @@ document.addEventListener('DOMContentLoaded', function () {
     new Chart(document.getElementById('memoryChart'), chartConfig('Memory %', '#16b47b'));
     new Chart(document.getElementById('networkChart'), chartConfig('Mbps', '#4d79ff'));
 });
+
+function runHealthAnalysis(equipmentId) {
+    fetch(`/assets/api/health-analysis/${equipmentId}/`)
+        .then(response => response.json())
+        .then(data => {
+            alert(`Health Score: ${data.health_score}/100\nRisk Level: ${data.risk_level}`);
+        });
+}
+
+function categorizeAsset(equipmentId) {
+    fetch(`/assets/api/categorize/${equipmentId}/`)
+        .then(response => response.json())
+        .then(data => {
+            alert(`Suggested Category: ${data.category}\nConfidence: ${data.confidence}`);
+        });
+}
 </script>
 {% endblock %}

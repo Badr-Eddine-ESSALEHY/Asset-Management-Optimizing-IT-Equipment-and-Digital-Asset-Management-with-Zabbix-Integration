@@ -2,6 +2,9 @@
 import os
 from pathlib import Path
 
+from celery.schedules import crontab
+
+from .settings import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +24,116 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+# WebSocket Configuration (Django Channels)
+ASGI_APPLICATION = 'parcInfoCP.asgi.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# Enhanced Celery Beat Schedule
+CELERY_BEAT_SCHEDULE = {
+    # Existing monitoring tasks
+    'bulk-sync-monitoring': {
+        'task': 'assets.tasks.bulk_sync_monitoring',
+        'schedule': 3600.0,  # Every hour
+    },
+    'update-monitoring-data': {
+        'task': 'assets.tasks.update_monitoring_data',
+        'schedule': 300.0,  # Every 5 minutes
+    },
+
+    # New messaging & AI tasks
+    'check-license-expiration': {
+        'task': 'messages.tasks.check_license_expiration',
+        'schedule': 86400.0,  # Daily
+    },
+    'check-warranty-expiration': {
+        'task': 'messages.tasks.check_warranty_expiration',
+        'schedule': 86400.0,  # Daily
+    },
+    'check-maintenance-due': {
+        'task': 'messages.tasks.check_maintenance_due',
+        'schedule': 21600.0,  # Every 6 hours
+    },
+    'run-predictive-maintenance': {
+        'task': 'messages.tasks.run_predictive_maintenance',
+        'schedule': 43200.0,  # Every 12 hours
+    },
+    'cleanup-old-notifications': {
+        'task': 'messages.tasks.cleanup_old_notifications',
+        'schedule': 604800.0,  # Weekly
+    },
+    'send-daily-summary': {
+        'task': 'messages.tasks.send_daily_summary',
+        'schedule': crontab(hour=8, minute=0),  # Daily at 8 AM
+    },
+}
+
+# AI Configuration (Optional - add OpenAI API key if you want GPT features)
+# OPENAI_API_KEY = 'your-openai-api-key-here'
+
+# File Upload Settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+
+# Enhanced Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/django.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'assets': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'messages': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,8 +145,21 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'pages',
     'assets',
+    'messages',
 
 ]
+ZABBIX_CONFIG = {
+    'SERVER': 'http://your-ubuntu-server-ip/zabbix/api_jsonrpc.php',
+    'USERNAME': 'Admin',
+    'PASSWORD': 'zabbix',  # Change after setup!
+    'SNMP_COMMUNITY': 'public',  # Change for production!
+    'SNMP_VERSION': '2c',
+    'DEFAULT_TEMPLATES': [
+        'Linux by SNMP',
+        'Network interfaces by SNMP',
+        'Generic SNMP',
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
